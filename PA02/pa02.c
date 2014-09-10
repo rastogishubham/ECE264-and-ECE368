@@ -56,7 +56,12 @@ int main(int argc, char * * argv)
 
     // -- my_strcat. You will have to do this yourself... just
     // look at my_strcpy for an example, and go from there.
-
+    my_strcpy(buffer, s1);
+    my_strcat(buffer, "World!");
+    printf("my_strcat(buffer, World!),  buffer= \"%s\"\n", buffer);
+    my_strcpy(buffer, s2);
+    my_strcat(buffer, "My name is shubham");
+    printf("my_strcat(buffer, My name is shubham),  buffer= \"%s\"\n", buffer);
     // -- my_isspace. You will have to do this for yourself.
 
     // -- my_atoi. You will have to do this for yourself.
