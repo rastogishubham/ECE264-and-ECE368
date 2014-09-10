@@ -108,7 +108,7 @@ char * my_strcat(char * dest, const char * src)
 	int src_len = 0;
 	dest_len = my_strlen(dest);
 	src_len = my_strlen(src);
-	for(ind = 0; ind < src_len; ind++)
+	for(ind = 0; ind <= src_len; ind++)
 	{
 		dest[ind + dest_len] = src[ind];
 	}
@@ -124,8 +124,36 @@ int my_isspace(int ch)
 	return(0);
 }
 int my_atoi(const char * str)
-{
-	
-	return(0);
+{	
+	int neg = 0;
+	int ind = 0;
+	int ret = 0;
+	while((str[ind] >= '0' && str[ind] <= '9') || my_isspace((int) str[ind]) == 1 || str[ind] == '-')
+	{	
+		if(str[ind] == '-')
+		{
+			neg = 1;
+			ind++;
+		}
+		else if(my_isspace((int) str[ind]) == 1)
+		{
+			ind ++;
+		}
+		else if(str[ind] >= '0' && str[ind] <= '9')
+		{
+			ret *= 10;
+			ret += str[ind] - '0';
+			ind++;
+		}
+		else
+		{
+			return(0);
+		}
+	}
+	if(neg == 1)
+	{
+		ret = ret * -1;
+	}
+	return(ret);
 }
 
