@@ -16,10 +16,10 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 		new_dest = (char *)malloc(sizeof(char *) * (1 + 2 * (dest_len + src_len)));
 		//*n = strlen(new_dest);
 		strcpy(new_dest, *dest);
-		//free(*dest);
+		free(*dest);
 		*dest = new_dest;
 		strcat(*dest, src);
-		free(*dest);
+		//free(*dest);
 	}
 	else
 	{
