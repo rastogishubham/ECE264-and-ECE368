@@ -19,7 +19,7 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 		//free(*dest);
 		*dest = new_dest;
 		strcat(*dest, src);
-		//free(*dest);
+		free(*dest);
 	}
 	else
 	{

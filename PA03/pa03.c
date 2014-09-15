@@ -9,5 +9,6 @@ int main(int argc,char** argv)
 	int n = strlen(dest);
 	char * src = " Rastogi";
 	printf("The Concatenated String is %s\n\n",strcat_ex(&dest, &n, src));
+	free(dest);
 	return(EXIT_SUCCESS);
 }
