@@ -29,8 +29,26 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 
 char * * explode(const char * str, const char * delims, int * arrLen)
 {
-		
-	return(NULL);
+	int ind = 0;
+	int count_delim = 0;
+	int str_len = strlen(str);
+	for(ind = 0; ind < str_len; ind++)
+	{
+		if(strchr(delims, str[ind]) != NULL)
+		{
+			count_delims++;
+		}
+	}
+	char * * strArr = malloc((count_delim + 1) * sizeof(char *));
+	ind = 0;
+	int last = 0;
+	int arrInd = 0;
+	for(ind = 0; ind < str_len; ind++)
+	{
+		if(strchr(delims, str[ind]) != NULL)
+		{
+			char * new_str 
+	return(NULL);	
 }
 char * implode(char * * strArr, int len, const char * glue)
 {
