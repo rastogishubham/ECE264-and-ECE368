@@ -14,12 +14,11 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 	if(*dest == NULL || dest_len + src_len + 1 > *n)
 	{
 		new_dest = (char *)malloc(sizeof(char *) * (1 + 2 * (dest_len + src_len)));
-		//*n = strlen(new_dest);
 		strcpy(new_dest, *dest);
 		free(*dest);
 		*dest = new_dest;
+		*n = strlen(new_dest);
 		strcat(*dest, src);
-		//free(*dest);
 	}
 	else
 	{
@@ -30,6 +29,7 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 
 char * * explode(const char * str, const char * delims, int * arrLen)
 {
+		
 	return(NULL);
 }
 char * implode(char * * strArr, int len, const char * glue)
