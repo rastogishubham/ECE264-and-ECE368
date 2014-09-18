@@ -1,124 +1,34 @@
-Breakpoint 1 at 0x40065c: file answer03.c, line 6.
+Quit
+Quit
+Quit
+Quit
+Quit
+Quit
+Quit
+Quit
+Quit
+Quit
+Breakpoint 1 at 0x4006d4: file pa03.c, line 1.
 Starting program: /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/pa03 
 
-Breakpoint 1, strcat_ex (dest=0x7fffffffe380, n=0x7fffffffe37c, src=0x4008a0 "Rastogi") at answer03.c:6
-6		int dest_len = 0;
-$1 = (char **) 0x7fffffffe380
-$2 = 0x400898 "Shubham"
-$3 = 0x400898 "Shubham"
-7		int src_len = 0;
-$4 = 0
-9		src_len = strlen(src);
-4	char * strcat_ex(char * * dest, int * n, const char * src)
-5	{
-6		int dest_len = 0;
-7		int src_len = 0;
-8		char * new_dest;
-9		src_len = strlen(src);
-10		if(*dest != NULL)
-11		{
-12			dest_len = strlen(*dest);
-13		}
-10		if(*dest != NULL)
-5	{
-6		int dest_len = 0;
-7		int src_len = 0;
-8		char * new_dest;
-9		src_len = strlen(src);
-10		if(*dest != NULL)
-11		{
-12			dest_len = strlen(*dest);
-13		}
-14		if(*dest == NULL || dest_len + src_len + 1 > *n)
-15		{
-16			new_dest = (char *)malloc(sizeof(char*)*(1 + 2 * (dest_len + src_len)));
-17			*n = sizeof(new_dest);
-18			strcpy(new_dest, *dest);
-19			//free(*dest);
-20			strcat(new_dest, *dest);
-21			strcat(*dest, src);
-22		}
-23		else
-24		{
-12			dest_len = strlen(*dest);
-14		if(*dest == NULL || dest_len + src_len + 1 > *n)
-$5 = 7
-16			new_dest = (char *)malloc(sizeof(char*)*(1 + 2 * (dest_len + src_len)));
-$6 = 0x4008a0 "Rastogi"
-$7 = 0x4008a0 "Rastogi"
-$8 = 8
-$9 = 8
-$10 = 8
-17			*n = sizeof(new_dest);
-$11 = 7
-12			dest_len = strlen(*dest);
-13		}
-14		if(*dest == NULL || dest_len + src_len + 1 > *n)
-15		{
-16			new_dest = (char *)malloc(sizeof(char*)*(1 + 2 * (dest_len + src_len)));
-17			*n = sizeof(new_dest);
-18			strcpy(new_dest, *dest);
-19			//free(*dest);
-20			strcat(new_dest, *dest);
-21			strcat(*dest, src);
-18			strcpy(new_dest, *dest);
-20			strcat(new_dest, *dest);
-$12 = 0x601010 "Shubham"
-21			strcat(*dest, src);
-$13 = 0x601010 "ShubhamShubham"
+Breakpoint 1, main (argc=1, argv=0x7fffffffe478) at pa03.c:8
+8		char * dest = "Shubham";
+9		int n = strlen(dest);
+10		char * src = " Rastogi";
+11		dest = malloc(sizeof(char *) * (1 + 2 *(strlen(dest) + strlen(src))));
+12		strcpy(dest, "Shubham");
+13		printf("The Concatenated String is %s\n\n",strcat_ex(&dest, &n, src));
+14		free(dest);
+16		int i = 0;
+17		int len = 0;
+18		char * * strArr = explode("The\nTuring Test", " \t\v\r\f\n", &len);
+$1 = 0x89485ed18949ed31 <Address 0x89485ed18949ed31 out of bounds>
 
 Program received signal SIGSEGV, Segmentation fault.
-strcat () at ../sysdeps/x86_64/strcat.S:244
-244		movb	%al, (%rdx)	/* 1st byte.  */
+__strcpy_ssse3 () at ../sysdeps/x86_64/multiarch/strcpy.S:1162
+1162		mov	%cl, (%rdi)
 A debugging session is active.
 
-	Inferior 1 [process 32042] will be killed.
-
-Quit anyway? (y or n) Breakpoint 1 at 0x40065c: file answer03.c, line 6.
-Starting program: /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/pa03 
-
-Breakpoint 1, strcat_ex (dest=0x7fffffffe380, n=0x7fffffffe37c, src=0x4008a0 "Rastogi") at answer03.c:6
-warning: Source file is more recent than executable.
-6		int dest_len = 0;
-7		int src_len = 0;
-9		src_len = strlen(src);
-10		if(*dest != NULL)
-12			dest_len = strlen(*dest);
-7		int src_len = 0;
-8		char * new_dest;
-9		src_len = strlen(src);
-10		if(*dest != NULL)
-11		{
-12			dest_len = strlen(*dest);
-13		}
-14		if(*dest == NULL || dest_len + src_len + 1 > *n)
-15		{
-16			new_dest = (char *)malloc(sizeof(char*)*(1 + 2 * (dest_len + src_len)));
-14		if(*dest == NULL || dest_len + src_len + 1 > *n)
-16			new_dest = (char *)malloc(sizeof(char*)*(1 + 2 * (dest_len + src_len)));
-17			*n = sizeof(new_dest);
-18			strcpy(new_dest, *dest);
-20			//strcat(new_dest, *dest);
-15		{
-16			new_dest = (char *)malloc(sizeof(char*)*(1 + 2 * (dest_len + src_len)));
-17			*n = sizeof(new_dest);
-18			strcpy(new_dest, *dest);
-19			//free(*dest);
-20			//strcat(new_dest, *dest);
-21			*dest = new_dest;
-22			strcat(*dest, src);
-23		}
-24		else
-$1 = (char **) 0x7fffffffe380
-$2 = 0x400898 "Shubham"
-$3 = 0x400898 "Shubham"
-21			*dest = new_dest;
-
-Program received signal SIGSEGV, Segmentation fault.
-strcat () at ../sysdeps/x86_64/strcat.S:244
-244		movb	%al, (%rdx)	/* 1st byte.  */
-A debugging session is active.
-
-	Inferior 1 [process 12810] will be killed.
+	Inferior 1 [process 34214] will be killed.
 
 Quit anyway? (y or n) 

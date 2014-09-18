@@ -1,73 +1,73 @@
-==30831== Memcheck, a memory error detector
-==30831== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
-==30831== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
-==30831== Command: ./pa03
-==30831== Parent PID: 10610
-==30831== 
---30831-- 
---30831-- Valgrind options:
---30831--    --tool=memcheck
---30831--    --leak-check=full
---30831--    --verbose
---30831--    --log-file=memcheck.log
---30831-- Contents of /proc/version:
---30831--   Linux version 2.6.32-431.29.2.el6.x86_64 (mockbuild@x86-026.build.eng.bos.redhat.com) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-4) (GCC) ) #1 SMP Sun Jul 27 15:55:46 EDT 2014
---30831-- Arch and hwcaps: AMD64, amd64-sse3-cx16-avx
---30831-- Page sizes: currently 4096, max supported 4096
---30831-- Valgrind library directory: /usr/lib64/valgrind
---30831-- Reading syms from /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/pa03
---30831-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
---30831--    object doesn't have a dynamic symbol table
---30831-- Reading syms from /lib64/ld-2.12.so
---30831--   Considering /usr/lib/debug/.build-id/57/bf668f99b7f5917b8d55fbb645173c9a644575.debug ..
---30831--   .. build-id is valid
---30831-- Scheduler: using generic scheduler lock implementation.
---30831-- Reading suppressions file: /usr/lib64/valgrind/default.supp
-==30831== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-30831-by-rastogis-on-ecegrid-thin4.ecn.purdue.edu
-==30831== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-30831-by-rastogis-on-ecegrid-thin4.ecn.purdue.edu
-==30831== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-30831-by-rastogis-on-ecegrid-thin4.ecn.purdue.edu
-==30831== 
-==30831== TO CONTROL THIS PROCESS USING vgdb (which you probably
-==30831== don't want to do, unless you know exactly what you're doing,
-==30831== or are doing some strange experiment):
-==30831==   /usr/lib64/valgrind/../../bin/vgdb --pid=30831 ...command...
-==30831== 
-==30831== TO DEBUG THIS PROCESS USING GDB: start GDB like this
-==30831==   /path/to/gdb ./pa03
-==30831== and then give GDB the following command
-==30831==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=30831
-==30831== --pid is optional if only one valgrind process is running
-==30831== 
---30831-- REDIR: 0x36c2417530 (strlen) redirected to 0x38049551 (vgPlain_amd64_linux_REDIR_FOR_strlen)
---30831-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
---30831-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
---30831-- REDIR: 0x36c24173a0 (index) redirected to 0x4a07bf0 (index)
---30831-- REDIR: 0x36c2417420 (strcmp) redirected to 0x4a08530 (strcmp)
---30831-- Reading syms from /lib64/libc-2.12.so
---30831--   Considering /usr/lib/debug/.build-id/07/b5ce35eba864a01b697f5ca117e94b9248064f.debug ..
---30831--   .. build-id is valid
---30831-- REDIR: 0x36c2884cd0 (strcasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---30831-- REDIR: 0x36c2886f90 (strncasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---30831-- REDIR: 0x36c2882c40 (__GI_strrchr) redirected to 0x4a07a70 (__GI_strrchr)
---30831-- REDIR: 0x36c2881120 (strlen) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---30831-- REDIR: 0x36c2933560 (__strlen_sse42) redirected to 0x4a07f50 (strlen)
---30831-- REDIR: 0x36c287a640 (malloc) redirected to 0x4a0696c (malloc)
---30831-- REDIR: 0x36c2889670 (memcpy) redirected to 0x4a08b20 (memcpy)
---30831-- REDIR: 0x36c2880b70 (strcpy) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---30831-- REDIR: 0x36c2934000 (???) redirected to 0x4a07f90 (strcpy)
---30831-- REDIR: 0x36c287b520 (free) redirected to 0x4a06369 (free)
---30831-- REDIR: 0x36c287f470 (strcat) redirected to 0x4a07c20 (strcat)
---30831-- REDIR: 0x36c288aaf0 (strchrnul) redirected to 0x4a09f10 (strchrnul)
-==30831== 
-==30831== HEAP SUMMARY:
-==30831==     in use at exit: 0 bytes in 0 blocks
-==30831==   total heap usage: 2 allocs, 2 frees, 279 bytes allocated
-==30831== 
-==30831== All heap blocks were freed -- no leaks are possible
-==30831== 
-==30831== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
---30831-- 
---30831-- used_suppression:      4 U1004-ARM-_dl_relocate_object
---30831-- used_suppression:      2 glibc-2.5.x-on-SUSE-10.2-(PPC)-2a
-==30831== 
-==30831== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+==15055== Memcheck, a memory error detector
+==15055== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==15055== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==15055== Command: ./pa03
+==15055== Parent PID: 2268
+==15055== 
+--15055-- 
+--15055-- Valgrind options:
+--15055--    --tool=memcheck
+--15055--    --leak-check=full
+--15055--    --verbose
+--15055--    --log-file=memcheck.log
+--15055-- Contents of /proc/version:
+--15055--   Linux version 2.6.32-431.29.2.el6.x86_64 (mockbuild@x86-026.build.eng.bos.redhat.com) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-4) (GCC) ) #1 SMP Sun Jul 27 15:55:46 EDT 2014
+--15055-- Arch and hwcaps: AMD64, amd64-sse3-cx16
+--15055-- Page sizes: currently 4096, max supported 4096
+--15055-- Valgrind library directory: /usr/lib64/valgrind
+--15055-- Reading syms from /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/pa03
+--15055-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
+--15055--    object doesn't have a dynamic symbol table
+--15055-- Reading syms from /lib64/ld-2.12.so
+--15055--   Considering /usr/lib/debug/.build-id/57/bf668f99b7f5917b8d55fbb645173c9a644575.debug ..
+--15055--   .. build-id is valid
+--15055-- Scheduler: using generic scheduler lock implementation.
+--15055-- Reading suppressions file: /usr/lib64/valgrind/default.supp
+==15055== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-15055-by-rastogis-on-ecegrid-thin1.ecn.purdue.edu
+==15055== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-15055-by-rastogis-on-ecegrid-thin1.ecn.purdue.edu
+==15055== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-15055-by-rastogis-on-ecegrid-thin1.ecn.purdue.edu
+==15055== 
+==15055== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==15055== don't want to do, unless you know exactly what you're doing,
+==15055== or are doing some strange experiment):
+==15055==   /usr/lib64/valgrind/../../bin/vgdb --pid=15055 ...command...
+==15055== 
+==15055== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==15055==   /path/to/gdb ./pa03
+==15055== and then give GDB the following command
+==15055==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=15055
+==15055== --pid is optional if only one valgrind process is running
+==15055== 
+--15055-- REDIR: 0x3f79a17530 (strlen) redirected to 0x38049551 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--15055-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
+--15055-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
+--15055-- REDIR: 0x3f79a173a0 (index) redirected to 0x4a07bf0 (index)
+--15055-- REDIR: 0x3f79a17420 (strcmp) redirected to 0x4a08530 (strcmp)
+--15055-- Reading syms from /lib64/libc-2.12.so
+--15055--   Considering /usr/lib/debug/.build-id/07/b5ce35eba864a01b697f5ca117e94b9248064f.debug ..
+--15055--   .. build-id is valid
+--15055-- REDIR: 0x3f79e84cd0 (strcasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--15055-- REDIR: 0x3f79e86f90 (strncasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--15055-- REDIR: 0x3f79e82c40 (__GI_strrchr) redirected to 0x4a07a70 (__GI_strrchr)
+--15055-- REDIR: 0x3f79e81120 (strlen) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--15055-- REDIR: 0x3f79f33560 (__strlen_sse42) redirected to 0x4a07f50 (strlen)
+--15055-- REDIR: 0x3f79e7a640 (malloc) redirected to 0x4a0696c (malloc)
+--15055-- REDIR: 0x3f79e89670 (memcpy) redirected to 0x4a08b20 (memcpy)
+--15055-- REDIR: 0x3f79e80b70 (strcpy) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--15055-- REDIR: 0x3f79f34000 (???) redirected to 0x4a07f90 (strcpy)
+--15055-- REDIR: 0x3f79e7b520 (free) redirected to 0x4a06369 (free)
+--15055-- REDIR: 0x3f79e7f470 (strcat) redirected to 0x4a07c20 (strcat)
+--15055-- REDIR: 0x3f79e8aaf0 (strchrnul) redirected to 0x4a09f10 (strchrnul)
+==15055== 
+==15055== HEAP SUMMARY:
+==15055==     in use at exit: 0 bytes in 0 blocks
+==15055==   total heap usage: 2 allocs, 2 frees, 368 bytes allocated
+==15055== 
+==15055== All heap blocks were freed -- no leaks are possible
+==15055== 
+==15055== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+--15055-- 
+--15055-- used_suppression:      4 U1004-ARM-_dl_relocate_object
+--15055-- used_suppression:      2 glibc-2.5.x-on-SUSE-10.2-(PPC)-2a
+==15055== 
+==15055== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
