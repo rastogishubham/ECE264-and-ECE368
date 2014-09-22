@@ -35,7 +35,37 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 
 char * * explode(const char * str, const char * delims, int * arrLen)
 {
-	return(NULL);
+	int N = 0;
+	int ind = 0;
+	for(ind = 0; ind < strlen(str); ind++)
+	{
+		if(strchr(delims, str[ind]) != NULL)
+		{
+			N++;	
+		}
+	}
+	char * * strArr = malloc((N + 1) * sizeof(char *));
+	strArr[0] = '\0';
+	int last = 0;
+	ind = 0;
+	int arrInd = 0;
+	for(ind = 0; ind < strlen(str); ind ++)
+	{
+		if(strchr(delims, str[ind]) != NULL)
+		{	
+			strArr[arrInd] = malloc(sizeof(char *) * (ind  - last -1));
+			strArr[arrInd] = '\0';
+			memcpy(strArr[arrInd], &str[last],  ind - last - 1);
+			last = ind + 1;
+			arrInd++;
+			(* arrLen)++;
+		}
+	}
+	strArr[arrInd] = malloc(sizeof(char *) * (ind- last - 1));
+	strArr[arrInd] = '\0';
+	memcpy(strArr[arrInd], &str[last], ind - last - 1);
+	(* arrLen)++;
+	return(strArr);
 }
 char * implode(char * * strArr, int len, const char * glue)
 {
@@ -64,15 +94,8 @@ int cmpfuncstring(const void * arg1, const void * arg2)
 int cmpfuncchar(const void * arg1, const void * arg2)
 {
 	const char * ptr1 = (char *) arg1;
-	const cahr * ptr2 = (char *) arg2;
+	const char * ptr2 = (char *) arg2;
 	const char ch1 = * ptr1;
 	const char ch2 = * ptr2;
-	if(ch1 < ch2)
-	{
-		return(-1);
-	}
-	else
-	{
-		return(0);
-	}
+	return(ch1 - ch2);
 }
