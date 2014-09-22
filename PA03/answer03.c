@@ -1,6 +1,7 @@
 #include"answer03.h"
 #include<string.h>
-
+int cmpfuncstring(const void *, const void *);
+int cmpfuncchar(const void *, const void *);
 char * strcat_ex(char * * dest, int * n, const char * src)
 {
 	int src_len = 0;
@@ -19,7 +20,6 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 	{
 		int dest_len = strlen(*dest);
 		new_dest = (char *)malloc(sizeof(char *) * (1 + 2 * (strlen(*dest) + src_len)));
-		//new_dest = '\0';
 		strcpy(new_dest, *dest);
 		free(*dest);
 		*dest = new_dest;
@@ -35,36 +35,7 @@ char * strcat_ex(char * * dest, int * n, const char * src)
 
 char * * explode(const char * str, const char * delims, int * arrLen)
 {
-	int ind = 0;
-	int count_delims= 0;
-	int str_len = strlen(str);
-	for(ind = 0; ind < str_len; ind++)
-	{
-		if(strchr(delims, str[ind]) != NULL)
-		{
-			count_delims++;
-		}
-	}
-	char * * strArr = malloc((count_delims + 1) * sizeof(char *));
-	ind = 0;
-	int last = 0;
-	int arrInd = 0;
-	for(ind = 0; ind < str_len; ind++)
-	{
-		if(strchr(delims, str[ind]) != NULL)
-		{
-			char * new_str = malloc(sizeof(char *) * (ind - last));
-			memcpy(new_str, &str[last], last - ind + 1);
-			strcpy(strArr[arrInd], new_str);
-			last = ind + 1;
-			arrInd++;
-		}
-	}
-	char * new_str = malloc(sizeof(char *) * (str_len - last));
-	memcpy(new_str, &str[last], last - str_len - 1);
-	strcpy(strArr[arrInd], new_str);
-	*arrLen = arrInd + 1;
-	return(strArr);	
+	return(NULL);
 }
 char * implode(char * * strArr, int len, const char * glue)
 {
@@ -72,14 +43,36 @@ char * implode(char * * strArr, int len, const char * glue)
 }
 void sortStringArray(char * * arrString, int len)
 {
-
+	qsort(&arrString[0], len, sizeof(char *), cmpfuncstring);
 }
 void sortStringCharacters(char * str)
 {
-
+	qsort(&str[0], strlen(str), sizeof(char), cmpfuncchar);
 }
 void destroyStringArray(char * * strArr, int len)
 {
 
 }
-
+int cmpfuncstring(const void * arg1, const void * arg2)
+{
+	const char * const * ptr1 = (const char * *) arg1;
+	const char * const * ptr2 = (const char * *) arg2;
+	const char * str1 = * ptr1;
+	const char * str2 = * ptr2;
+	return(strcmp(str1, str2));
+}
+int cmpfuncchar(const void * arg1, const void * arg2)
+{
+	const char * ptr1 = (char *) arg1;
+	const cahr * ptr2 = (char *) arg2;
+	const char ch1 = * ptr1;
+	const char ch2 = * ptr2;
+	if(ch1 < ch2)
+	{
+		return(-1);
+	}
+	else
+	{
+		return(0);
+	}
+}
