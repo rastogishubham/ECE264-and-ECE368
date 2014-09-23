@@ -44,7 +44,9 @@ char * * explode(const char * str, const char * delims, int * arrLen)
 			N++;	
 		}
 	}
+	*arrLen = N+1;
 	char * * strArr = malloc((N + 1) * sizeof(char *));
+	//printf("strArr = %p\n", strArr);
 	strArr[0] = '\0';
 	int last = 0;
 	ind = 0;
@@ -53,18 +55,19 @@ char * * explode(const char * str, const char * delims, int * arrLen)
 	{
 		if(strchr(delims, str[ind]) != NULL)
 		{	
-			strArr[arrInd] = malloc(sizeof(char *) * (ind  - last -1));
-			strArr[arrInd] = '\0';
-			memcpy(strArr[arrInd], &str[last],  ind - last - 1);
+			strArr[arrInd] = malloc(sizeof(char) * (ind  - last + 1));
+			//printf("just malloced %p\n", strArr[arrInd]);
+			//strArr[arrInd] = '\0';
+			memcpy(strArr[arrInd], &str[last],  ind - last);
+			strArr[arrInd][ind - last] = '\0';
 			last = ind + 1;
 			arrInd++;
-			(* arrLen)++;
 		}
 	}
-	strArr[arrInd] = malloc(sizeof(char *) * (ind- last - 1));
-	strArr[arrInd] = '\0';
-	memcpy(strArr[arrInd], &str[last], ind - last - 1);
-	(* arrLen)++;
+	strArr[arrInd] = malloc(sizeof(char *) * (ind- last + 1));
+	//strArr[arrInd] = '\0';
+	memcpy(strArr[arrInd], &str[last], ind - last);
+	strArr[arrInd][ind - last] = '\0';
 	return(strArr);
 }
 char * implode(char * * strArr, int len, const char * glue)
@@ -72,7 +75,7 @@ char * implode(char * * strArr, int len, const char * glue)
 	return(NULL);
 }
 void sortStringArray(char * * arrString, int len)
-{
+{	
 	qsort(&arrString[0], len, sizeof(char *), cmpfuncstring);
 }
 void sortStringCharacters(char * str)
@@ -81,7 +84,12 @@ void sortStringCharacters(char * str)
 }
 void destroyStringArray(char * * strArr, int len)
 {
-
+	int ind = 0;
+	for(ind = 0; ind < len; ind++)
+	{
+		free(strArr[ind]);
+	}
+	free(strArr);
 }
 int cmpfuncstring(const void * arg1, const void * arg2)
 {

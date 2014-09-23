@@ -1,34 +1,21 @@
-Quit
-Quit
-Quit
-Quit
-Quit
-Quit
-Quit
-Quit
-Quit
-Quit
-Breakpoint 1 at 0x4006d4: file pa03.c, line 1.
-Starting program: /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/pa03 
+Breakpoint 1 at 0x400514: file main.c, line 1.
+Starting program: /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/a.out 
 
-Breakpoint 1, main (argc=1, argv=0x7fffffffe478) at pa03.c:8
-8		char * dest = "Shubham";
-9		int n = strlen(dest);
-10		char * src = " Rastogi";
-11		dest = malloc(sizeof(char *) * (1 + 2 *(strlen(dest) + strlen(src))));
-12		strcpy(dest, "Shubham");
-13		printf("The Concatenated String is %s\n\n",strcat_ex(&dest, &n, src));
-14		free(dest);
-16		int i = 0;
-17		int len = 0;
-18		char * * strArr = explode("The\nTuring Test", " \t\v\r\f\n", &len);
-$1 = 0x89485ed18949ed31 <Address 0x89485ed18949ed31 out of bounds>
-
-Program received signal SIGSEGV, Segmentation fault.
-__strcpy_ssse3 () at ../sysdeps/x86_64/multiarch/strcpy.S:1162
-1162		mov	%cl, (%rdi)
+Breakpoint 1, swapString (a=0x400919 "one", b=0x40091d "two") at main.c:10
+10	    const char * tmp = a;
+5	
+6	// This does not work... fix it.
+7	// Hint: look up swap(int *, int *) in the course notes
+8	void swapString(const char * a, const char * b)
+9	{
+10	    const char * tmp = a;
+11	    a = b;
+12	    b = tmp;
+13	    printf("Calling swapString(...)\n");
+14	    printf("&a = %p\n", &a);
+11	    a = b;
 A debugging session is active.
 
-	Inferior 1 [process 34214] will be killed.
+	Inferior 1 [process 10077] will be killed.
 
 Quit anyway? (y or n) 
