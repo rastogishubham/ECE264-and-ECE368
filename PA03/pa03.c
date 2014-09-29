@@ -27,14 +27,16 @@ int main(int argc,char** argv)
 	//strArr[0] = malloc(strlen("the\nturing test") + 1);
 	//strcpy(strArr[0], "the\nturing test");
 	//strArr = explode(strArr[0], " \t\v\n\r\f", &len);
-	char * str = "The\nturing test";
-	char * delims = " \nt";
+	char * str = "The turing test";
+	char * delims = " ";
 	char * * strArr = explode(str, delims, &len);
+	str = implode(strArr, len, " ");
 	printf(" length is %d\n", len);
 	int ind;
 	for(ind = 0; ind < len; ++ind) {
 		printf("strarr[%d] = %p = '%s'\n", ind, strArr[ind], strArr[ind]);
-	}		
+	}
+	printf("(%s)\n", str);		
 	for(ind = 0; ind < len; ++ind)
 		free(strArr[ind]);
 	printf("about to free %p\n", strArr);

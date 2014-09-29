@@ -1,5 +1,6 @@
 #include"answer03.h"
 #include<string.h>
+#include<stdio.h>
 int cmpfuncstring(const void *, const void *);
 int cmpfuncchar(const void *, const void *);
 char * strcat_ex(char * * dest, int * n, const char * src)
@@ -72,7 +73,35 @@ char * * explode(const char * str, const char * delims, int * arrLen)
 }
 char * implode(char * * strArr, int len, const char * glue)
 {
-	return(NULL);
+	char * str = NULL;
+//	*str = '\0';
+	int ind = 0;
+	int len_strArr = 0;
+	for(ind = 0; ind < len; ind++)
+	{
+		len_strArr = strlen(strArr[ind]);
+		//str = malloc(sizeof(char *) * (len_strArr + 1));
+		strcat_ex(&str, &len_strArr, strArr[ind]);
+		if(ind < len -1)
+		{
+			strcat(str, glue);
+		}	
+	}
+	/*
+	ind = 0;
+	for(ind = 0; ind < len; ind++)
+	{	
+		len_strArr = strlen(strArr[ind]);
+		//memcpy(str, strArr[ind], len_strArr - 1);
+		strcat(str, strArr[ind]);
+		if(ind < len -1)
+		{
+			strcat(str, glue);
+		}
+	}
+//	int len_str = strlen(str);
+//	str[len_str] = '\0';*/
+	return(str);
 }
 void sortStringArray(char * * arrString, int len)
 {	

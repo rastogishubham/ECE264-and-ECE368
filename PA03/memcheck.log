@@ -1,75 +1,89 @@
-==23095== Memcheck, a memory error detector
-==23095== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
-==23095== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
-==23095== Command: ./a.out
-==23095== Parent PID: 20363
-==23095== 
---23095-- 
---23095-- Valgrind options:
---23095--    --tool=memcheck
---23095--    --leak-check=full
---23095--    --verbose
---23095--    --log-file=memcheck.log
---23095-- Contents of /proc/version:
---23095--   Linux version 2.6.32-431.29.2.el6.x86_64 (mockbuild@x86-026.build.eng.bos.redhat.com) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-4) (GCC) ) #1 SMP Sun Jul 27 15:55:46 EDT 2014
---23095-- Arch and hwcaps: AMD64, amd64-sse3-cx16
---23095-- Page sizes: currently 4096, max supported 4096
---23095-- Valgrind library directory: /usr/lib64/valgrind
---23095-- Reading syms from /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/a.out
---23095-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
---23095--    object doesn't have a dynamic symbol table
---23095-- Reading syms from /lib64/ld-2.12.so
---23095--   Considering /usr/lib/debug/.build-id/57/bf668f99b7f5917b8d55fbb645173c9a644575.debug ..
---23095--   .. build-id is valid
---23095-- Scheduler: using generic scheduler lock implementation.
---23095-- Reading suppressions file: /usr/lib64/valgrind/default.supp
-==23095== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-23095-by-rastogis-on-ecegrid-thin1.ecn.purdue.edu
-==23095== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-23095-by-rastogis-on-ecegrid-thin1.ecn.purdue.edu
-==23095== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-23095-by-rastogis-on-ecegrid-thin1.ecn.purdue.edu
-==23095== 
-==23095== TO CONTROL THIS PROCESS USING vgdb (which you probably
-==23095== don't want to do, unless you know exactly what you're doing,
-==23095== or are doing some strange experiment):
-==23095==   /usr/lib64/valgrind/../../bin/vgdb --pid=23095 ...command...
-==23095== 
-==23095== TO DEBUG THIS PROCESS USING GDB: start GDB like this
-==23095==   /path/to/gdb ./a.out
-==23095== and then give GDB the following command
-==23095==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=23095
-==23095== --pid is optional if only one valgrind process is running
-==23095== 
---23095-- REDIR: 0x3f79a17530 (strlen) redirected to 0x38049551 (vgPlain_amd64_linux_REDIR_FOR_strlen)
---23095-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
---23095-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
---23095-- REDIR: 0x3f79a173a0 (index) redirected to 0x4a07bf0 (index)
---23095-- REDIR: 0x3f79a17420 (strcmp) redirected to 0x4a08530 (strcmp)
---23095-- Reading syms from /lib64/libc-2.12.so
---23095--   Considering /usr/lib/debug/.build-id/07/b5ce35eba864a01b697f5ca117e94b9248064f.debug ..
---23095--   .. build-id is valid
---23095-- REDIR: 0x3f79e84cd0 (strcasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---23095-- REDIR: 0x3f79e86f90 (strncasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---23095-- REDIR: 0x3f79e82c40 (__GI_strrchr) redirected to 0x4a07a70 (__GI_strrchr)
---23095-- REDIR: 0x3f79e81120 (strlen) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---23095-- REDIR: 0x3f79f33560 (__strlen_sse42) redirected to 0x4a07f50 (strlen)
---23095-- REDIR: 0x3f79e7a640 (malloc) redirected to 0x4a0696c (malloc)
---23095-- REDIR: 0x3f79e89670 (memcpy) redirected to 0x4a08b20 (memcpy)
---23095-- REDIR: 0x3f79e80b70 (strcpy) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---23095-- REDIR: 0x3f79f34000 (???) redirected to 0x4a07f90 (strcpy)
---23095-- REDIR: 0x3f79e7b520 (free) redirected to 0x4a06369 (free)
---23095-- REDIR: 0x3f79e7f470 (strcat) redirected to 0x4a07c20 (strcat)
---23095-- REDIR: 0x3f79e8aaf0 (strchrnul) redirected to 0x4a09f10 (strchrnul)
---23095-- REDIR: 0x3f79e7f630 (index) redirected to 0x480155c (_vgnU_ifunc_wrapper)
---23095-- REDIR: 0x3f79f281e0 (__strchr_sse42) redirected to 0x4a07b00 (index)
-==23095== 
-==23095== HEAP SUMMARY:
-==23095==     in use at exit: 0 bytes in 0 blocks
-==23095==   total heap usage: 9 allocs, 9 frees, 439 bytes allocated
-==23095== 
-==23095== All heap blocks were freed -- no leaks are possible
-==23095== 
-==23095== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
---23095-- 
---23095-- used_suppression:      4 U1004-ARM-_dl_relocate_object
---23095-- used_suppression:      2 glibc-2.5.x-on-SUSE-10.2-(PPC)-2a
-==23095== 
-==23095== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+==45356== Memcheck, a memory error detector
+==45356== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==45356== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==45356== Command: ./pa03
+==45356== Parent PID: 14628
+==45356== 
+--45356-- 
+--45356-- Valgrind options:
+--45356--    --tool=memcheck
+--45356--    --leak-check=full
+--45356--    --verbose
+--45356--    --log-file=memcheck.log
+--45356-- Contents of /proc/version:
+--45356--   Linux version 2.6.32-431.23.3.el6.x86_64 (mockbuild@x86-027.build.eng.bos.redhat.com) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-4) (GCC) ) #1 SMP Wed Jul 16 06:12:23 EDT 2014
+--45356-- Arch and hwcaps: AMD64, amd64-sse3-cx16-avx
+--45356-- Page sizes: currently 4096, max supported 4096
+--45356-- Valgrind library directory: /usr/lib64/valgrind
+--45356-- Reading syms from /home/shay/a/rastogis/ECE264/solutions/demorepo/PA03/pa03
+--45356-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
+--45356--    object doesn't have a dynamic symbol table
+--45356-- Reading syms from /lib64/ld-2.12.so
+--45356--   Considering /usr/lib/debug/.build-id/57/bf668f99b7f5917b8d55fbb645173c9a644575.debug ..
+--45356--   .. build-id is valid
+--45356-- Scheduler: using generic scheduler lock implementation.
+--45356-- Reading suppressions file: /usr/lib64/valgrind/default.supp
+==45356== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-45356-by-rastogis-on-ecegrid-thin5.ecn.purdue.edu
+==45356== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-45356-by-rastogis-on-ecegrid-thin5.ecn.purdue.edu
+==45356== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-45356-by-rastogis-on-ecegrid-thin5.ecn.purdue.edu
+==45356== 
+==45356== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==45356== don't want to do, unless you know exactly what you're doing,
+==45356== or are doing some strange experiment):
+==45356==   /usr/lib64/valgrind/../../bin/vgdb --pid=45356 ...command...
+==45356== 
+==45356== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==45356==   /path/to/gdb ./pa03
+==45356== and then give GDB the following command
+==45356==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=45356
+==45356== --pid is optional if only one valgrind process is running
+==45356== 
+--45356-- REDIR: 0x3b21017530 (strlen) redirected to 0x38049551 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--45356-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
+--45356-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
+--45356-- REDIR: 0x3b210173a0 (index) redirected to 0x4a07bf0 (index)
+--45356-- REDIR: 0x3b21017420 (strcmp) redirected to 0x4a08530 (strcmp)
+--45356-- Reading syms from /lib64/libc-2.12.so
+--45356--   Considering /usr/lib/debug/.build-id/07/b5ce35eba864a01b697f5ca117e94b9248064f.debug ..
+--45356--   .. build-id is valid
+--45356-- REDIR: 0x3b21484cd0 (strcasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--45356-- REDIR: 0x3b21486f90 (strncasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--45356-- REDIR: 0x3b21482c40 (__GI_strrchr) redirected to 0x4a07a70 (__GI_strrchr)
+--45356-- REDIR: 0x3b21481120 (strlen) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--45356-- REDIR: 0x3b21533560 (__strlen_sse42) redirected to 0x4a07f50 (strlen)
+--45356-- REDIR: 0x3b2147a640 (malloc) redirected to 0x4a0696c (malloc)
+--45356-- REDIR: 0x3b21489670 (memcpy) redirected to 0x4a08b20 (memcpy)
+--45356-- REDIR: 0x3b21480b70 (strcpy) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--45356-- REDIR: 0x3b21534000 (???) redirected to 0x4a07f90 (strcpy)
+--45356-- REDIR: 0x3b2147b520 (free) redirected to 0x4a06369 (free)
+--45356-- REDIR: 0x3b2147f470 (strcat) redirected to 0x4a07c20 (strcat)
+--45356-- REDIR: 0x3b2148aaf0 (strchrnul) redirected to 0x4a09f10 (strchrnul)
+--45356-- REDIR: 0x3b2147f630 (index) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--45356-- REDIR: 0x3b215281e0 (__strchr_sse42) redirected to 0x4a07b00 (index)
+==45356== 
+==45356== HEAP SUMMARY:
+==45356==     in use at exit: 248 bytes in 1 blocks
+==45356==   total heap usage: 9 allocs, 8 frees, 915 bytes allocated
+==45356== 
+==45356== Searching for pointers to 1 not-freed blocks
+==45356== Checked 64,712 bytes
+==45356== 
+==45356== 248 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==45356==    at 0x4A069EE: malloc (vg_replace_malloc.c:270)
+==45356==    by 0x400859: strcat_ex (answer03.c:23)
+==45356==    by 0x400B77: implode (answer03.c:84)
+==45356==    by 0x400DDD: main (pa03.c:33)
+==45356== 
+==45356== LEAK SUMMARY:
+==45356==    definitely lost: 248 bytes in 1 blocks
+==45356==    indirectly lost: 0 bytes in 0 blocks
+==45356==      possibly lost: 0 bytes in 0 blocks
+==45356==    still reachable: 0 bytes in 0 blocks
+==45356==         suppressed: 0 bytes in 0 blocks
+==45356== 
+==45356== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 6 from 6)
+--45356-- 
+--45356-- used_suppression:      4 U1004-ARM-_dl_relocate_object
+--45356-- used_suppression:      2 glibc-2.5.x-on-SUSE-10.2-(PPC)-2a
+==45356== 
+==45356== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 6 from 6)
