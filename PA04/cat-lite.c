@@ -16,7 +16,7 @@ int main(int argc, char * * argv)
 	}
 	FILE * fptr;
 	ind = 0;
-	if(argc == 1)
+/*	if(argc == 1)
 	{
 		fptr = stdin;
 		while(!feof(fptr))
@@ -29,7 +29,7 @@ int main(int argc, char * * argv)
 		}
 		fclose(fptr);
 		return EXIT_SUCCESS; 
-	}
+	}*/
 	for(ind = 1; ind < argc; ind++)
 	{
 		if(strcmp(argv[ind], "-") == 0)
