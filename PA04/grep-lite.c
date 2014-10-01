@@ -35,6 +35,9 @@ int main(int argc, char * * argv)
 	while(!feof(fp))
 	{
 		fgets(str, 2000, fp);
+		if(strstr(str, argv[argc - 1]) != NULL)
+		{
+		}
 	}
 	return EXIT_SUCCESS;
 }
