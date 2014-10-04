@@ -45,58 +45,47 @@ int main(int argc, char * * argv)
 		}
 		if(strcmp(argv[ind], "-n") == 0 || strcmp(argv[ind], "--line-number") == 0)
 		{
-		//	printf("Line number found");
 			flag_line = 1;
 		}
 		if(strcmp(argv[ind], "-q") == 0 || strcmp(argv[ind], "--quiet") == 0)
-		{
-//			printf ("Quiet found!\n");			
+		{			
 
 			flag_quiet = 1;
 		}
 	}
 	while(fgets(str, 2001, fp) != NULL)
 	{
-		//printf("fgets not null \n");
 		if(strstr(str, argv[argc - 1]) != NULL && flag_quiet == 1)
 		{
-	//		printf ("Found match and quiet!\n");
 			return_val =  0;
 		}
 		if(strstr(str, argv[argc - 1]) == NULL && flag_quiet == 1)
 		{
-
-			//printf ("did not Find match and quiet!\n");
 			return_val = 0;
 		}
 		if(flag_invert == 1 && strstr(str, argv[argc - 1]) == NULL && flag_line == 1 && flag_quiet == 0)
 		{
-			//printf("a");
 			printf("%d: ", line_num);
 			printf("%s", str);
 			return_val = 0;
 		}
 		if(flag_invert == 1 && strstr(str, argv[argc - 1]) == NULL && flag_line == 0 && flag_quiet == 0)
 		{	
-			//printf("b");
 			printf("%s", str);
 			return_val = 0;
 		}
 		if(flag_invert == 0 && flag_line == 0 && flag_quiet == 0  && strstr(str, argv[argc - 1]) != NULL)
 		{	
-			//printf("c");
 			printf("%s", str);
 			return_val = 0;
 		}
 		if(flag_invert == 0 && flag_line == 1 && flag_quiet == 0 && strstr(str, argv[argc - 1]) != NULL)
 		{
-			//printf("d");
 			printf("%d: ", line_num);
 			printf("%s", str);
 			return_val = 0;
 		}
 		line_num++;
-		//fclose(fp);
 	}
 	fclose(fp);
 	return return_val;
