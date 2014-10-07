@@ -7,6 +7,33 @@ void partitionIncreasingHelper(int *, int, int);
 void partitionDecreasingHelper(int *, int, int);
 void partitionOddHelper(int * , int , int);
 void partitionEvenHelper(int *, int, int);
+void partitionOddAndEvenHelper(int*, int, int);
+void partitionOddAndEvenHelper(int * buffer, int ind, int left)
+{
+	int val;
+	if(left == 0)
+	{
+		printPartition(buffer, ind);
+		return;
+	}
+	for(val = 1; val <= left; val ++)
+	{
+		int valid = 0;
+		if(ind == 0)
+		{
+			valid = 1;
+		}
+		else
+		{
+			valid = (buffer[ind - 1] % 2) != (val % 2);
+		}
+		if(valid == 1)
+		{
+			buffer[ind] = val;
+			partitionOddAndEvenHelper(buffer, ind + 1, left - val);
+		}
+	}
+}
 void partitionEvenHelper(int * buffer, int ind, int left)
 {
 	int val;
@@ -137,7 +164,9 @@ void partitionEven(int value)
 }
 
 void partitionOddAndEven(int value)
-{
+{	
+	int * buffer = malloc(sizeof(int) * value);
+	partitionOddAndEvenHelper(buffer, 0, value);
 	return;
 }
 void partitionPrime(int value)
