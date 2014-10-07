@@ -8,6 +8,7 @@ int main(int argc, char ** argv)
 	//partitionAll(5);
 	//partitionIncreasing(4);
 	//partitionDecreasing(5);
-	partitionOdd(5);
+	//partitionOdd(5);
+	partitionEven(6);
 	return EXIT_SUCCESS;
 }
