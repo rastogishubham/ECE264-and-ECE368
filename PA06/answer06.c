@@ -5,11 +5,10 @@ void travel(char ** maze, int x, int y, int w, int h)
 	int space = 0;
 	int x1 = x, x2= x, x3 = x, x4 = x;
 	int y1 = y, y2 = y, y3 = y, y4 = y;
-	if(maze[x1+1][y1] != 'X'&& maze[x1+1][y1] != '.'  && x1 < h && y1 < w)
+	if(x1+1 < h && y1+1 < w && maze[x1+1][y1] != 'X' && maze[x1+1][y1] != '.')
 	{
-		while(maze[x1+1][y1] != 'X' && x1 < h && y1 < w)
+		while(x1+1 < h && y1+1 < w && maze[x1+1][y1] != 'X')
 		{	
-			printf("Q");
 			maze[x1][y1] = '.';
 			++x1;
 			++space;
@@ -18,9 +17,9 @@ void travel(char ** maze, int x, int y, int w, int h)
 		travel(maze, x1, y1, w, h);
 	}
 	space = 0;
-	if(maze[x2][y2+1] != 'X' && maze[x2][y2+1] != '.' && x2 < h && y2 < w)
+	if(x2+1 < h && y2+1 < w && maze[x2][y2+1] != 'X' && maze[x2][y2+1] != '.')
 	{
-		while(maze[x2][y2 + 1] != 'X' && x2 < h && y2 < w)
+		while(x2+1 < h && y2+1 < w && maze[x2][y2 + 1] != 'X')
 		{
 			maze[x2][y2] = '.';
 			++y2;
@@ -30,9 +29,9 @@ void travel(char ** maze, int x, int y, int w, int h)
 		travel(maze, x2, y2, w, h);
 	}
 	space = 0;
-	if(maze[x3-1][y3] != 'X' && maze[x3-1][y] != '.' && x3 < h && y3 < w)
+	if(x3-1 >= 0 && y3-1 >= 0 && maze[x3-1][y3] != 'X' && maze[x3-1][y] != '.')
 	{
-		while(maze[x3-1][y3] != 'X' && x3 < h && y3 < w)
+		while(x3-1 < h && y3-1 < w && maze[x3-1][y3] != 'X')
 		{
 			maze[x3][y3] = '.';
 			--x3;
@@ -42,9 +41,9 @@ void travel(char ** maze, int x, int y, int w, int h)
 		travel(maze, x3, y3, w, h);
 	}
 	space = 0;
-	if(maze[x4][y4-1] != 'X' && maze[x4][y4-1] != '.' && x4 < h && y4 < w)
+	if(x4-1 >= 0 && y4-1 >= 0 && maze[x4][y4-1] != 'X' && maze[x4][y4-1] != '.')
 	{
-		while(maze[x4][y4-1] != 'X' && x4 < h && y4 < w)
+		while(x4+1 < h && y4+1 < w && maze[x4][y4-1] != 'X')
 		{
 			maze[x4][y4] = '.';
 			--y4;
@@ -69,7 +68,6 @@ void print_directions(char ** maze, int w, int h) {
 		}
 	}
 	travel(maze, x, y, w, h);
-	printf("a");
 	return;
 }
 
