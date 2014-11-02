@@ -11,22 +11,18 @@ List * List_createNode(const char * name)
 }
 void List_destroy(List * list)
 {
-	if(list == NULL)
-	{
-		return;
-	}
 	while(list != NULL)
 	{
-		list  = list->next;
+		List * p = list->next;
 		free(list->str);
 		free(list);
+		list = p;
 	}
-	return;
 }
 int List_length(List * list)
 {
 	int len = 0;
-	while(list->next != NULL)
+	while(list != NULL)
 	{
 		len++;
 		list = list->next;
@@ -35,27 +31,97 @@ int List_length(List * list)
 }
 List * List_merge(List * lhs, List * rhs, int(*compar)(const char * , const char*))
 {
-	List new = NULL;
-	if(lhs->str == NULL && rhs->str == NULL)
+	int cmp = 0;
+	if(lhs == NULL){ return rhs;}
+	else if(rhs == NULL){ return lhs;}
+	List * new = NULL;
+	cmp = compar(lhs->str, rhs->str);
+	if(cmp <= 0)
 	{
-		return NULL;
+		new = lhs;
+		lhs = lhs->next;
 	}
-	if(lhs->str == NULL)
+	else
 	{
-		return rhs;
+		new = rhs;
+		rhs = rhs->next;
 	}
-	if(rhs->str == NULL)
-	{
-		return lhs;
-	}
+	List * new2 = new;
 	while(lhs != NULL && rhs != NULL)
 	{
-		
+		//printf("S");
+		cmp = compar(lhs->str, rhs->str);
+		if(cmp <= 0)
+		{
+			new2->next = lhs;
+			new2 = new2->next;
+			lhs = lhs->next;
+		}
+		else
+		{
+			new2->next = rhs;
+			new2 = new2->next;
+			rhs = rhs->next;
+		}
 	}
-	return lhs;
+	if(lhs != NULL)
+	{
+		while(lhs != NULL)
+		{
+		//	printf("A");
+			new2->next = lhs;
+			new2 = new2->next;
+			lhs = lhs->next;
+		}
+	}
+	if(rhs != NULL)
+	{
+		while(rhs != NULL)
+		{
+		//	printf("B");
+			new2->next = rhs;
+			new2 = new2->next;
+			rhs = rhs->next;
+		}
+	}
+/*	if(cmp <= 0)
+	{
+		lhs->next = List_merge(lhs->next, rhs, compar);
+		return lhs;
+	}
+	else
+	{
+		rhs->next = List_merge(rhs->next, lhs, compar);
+		return rhs;
+	}*/
+	return new;
 }
 List *  List_sort(List * list, int (*compar)(const char *, const char *))
 {
+	int len = List_length(list);
+	if(len <= 1)
+	{
+		return list;
+	}
+	int lhs_len = len / 2;
+	int lhs_ind = 0;
+	List * lhs = malloc(sizeof(List));
+	List * rhs = malloc(sizeof(List));
+	while(lhs_ind < lhs_len)
+	{
+		if(lhs_ind == lhs_len - 1)
+		{
+			rhs->next = list->next;
+			list->next = NULL;
+		}
+		List * p = lhs->next;
+		lhs_ind++;
+		list = p;
+	}
+	lhs->next= list;
+	lhs = List_sort(lhs, compar);
+	rhs = List_sort(rhs, compar);
+	list = List_merge(lhs, rhs, compar);
 	return list;
 }
 
