@@ -49,7 +49,6 @@ List * List_merge(List * lhs, List * rhs, int(*compar)(const char * , const char
 	List * new2 = new;
 	while(lhs != NULL && rhs != NULL)
 	{
-		//printf("S");
 		cmp = compar(lhs->str, rhs->str);
 		if(cmp <= 0)
 		{
@@ -68,7 +67,6 @@ List * List_merge(List * lhs, List * rhs, int(*compar)(const char * , const char
 	{
 		while(lhs != NULL)
 		{
-		//	printf("A");
 			new2->next = lhs;
 			new2 = new2->next;
 			lhs = lhs->next;
@@ -78,23 +76,12 @@ List * List_merge(List * lhs, List * rhs, int(*compar)(const char * , const char
 	{
 		while(rhs != NULL)
 		{
-		//	printf("B");
 			new2->next = rhs;
 			new2 = new2->next;
 			rhs = rhs->next;
 		}
 	}
-/*	if(cmp <= 0)
-	{
-		lhs->next = List_merge(lhs->next, rhs, compar);
-		return lhs;
-	}
-	else
-	{
-		rhs->next = List_merge(rhs->next, lhs, compar);
-		return rhs;
-	}*/
-	return new;
+		return new;
 }
 List *  List_sort(List * list, int (*compar)(const char *, const char *))
 {
@@ -105,23 +92,23 @@ List *  List_sort(List * list, int (*compar)(const char *, const char *))
 	}
 	int lhs_len = len / 2;
 	int lhs_ind = 0;
-	List * lhs = malloc(sizeof(List));
-	List * rhs = malloc(sizeof(List));
-	while(lhs_ind < lhs_len)
+	List * lhs = list;
+	List * rhs = NULL;
+	List * tmp = list;
+	while(tmp != NULL)
 	{
-		if(lhs_ind == lhs_len - 1)
-		{
-			rhs->next = list->next;
-			list->next = NULL;
-		}
-		List * p = lhs->next;
 		lhs_ind++;
-		list = p;
+		List * new = tmp->next;
+		if(lhs_ind == lhs_len)
+		{
+			tmp->next = NULL;
+			rhs = new;
+		}
+		tmp = new; 
 	}
-	lhs->next= list;
-	lhs = List_sort(lhs, compar);
-	rhs = List_sort(rhs, compar);
-	list = List_merge(lhs, rhs, compar);
-	return list;
+	List * first = List_sort(lhs, compar);
+	List * second = List_sort(rhs, compar);
+	List * merge = List_merge(first, second, compar);
+	return merge;
 }
 
