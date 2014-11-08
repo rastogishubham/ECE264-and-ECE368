@@ -1,0 +1,251 @@
+commit 875522e19a9d98d18da22298d7cd394851daca8d
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Fri Nov 7 18:46:22 2014 -0500
+
+    everything works
+
+commit 1f67eac346b474bb21ce708fdc292a9fb6287347
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Thu Nov 6 01:33:23 2014 -0500
+
+    first commit
+
+commit e6cf0845ebf6df30046267d921de06d5e8fc32d4
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin3.ecn.purdue.edu>
+Date:   Sun Nov 2 05:42:42 2014 -0500
+
+    third commit everything working
+
+commit cf203adddd70edee2fc360af50ca0af659be1abc
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin4.ecn.purdue.edu>
+Date:   Sun Nov 2 04:09:45 2014 -0500
+
+    merge working
+
+commit eb5362f978f4f866286d8b454f2191b91dcb728c
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin4.ecn.purdue.edu>
+Date:   Sat Nov 1 21:48:43 2014 -0400
+
+    first commit
+
+commit 055ccd1853383dc52034845e01dcb3d9a6cb3bb2
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin4.ecn.purdue.edu>
+Date:   Sun Oct 26 18:17:10 2014 -0400
+
+    second commit
+
+commit 093a5194032e8b339196481f0286a3bb10638028
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin2.ecn.purdue.edu>
+Date:   Sun Oct 26 03:09:58 2014 -0400
+
+    first commit
+
+commit 686e88ab99f42f68650fc7c96d572c85e23e95cc
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin3.ecn.purdue.edu>
+Date:   Fri Oct 17 19:11:45 2014 -0400
+
+    sixth commit
+
+commit 8faa24ae6435dc3143b219d37c8dc6a7df30d211
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin3.ecn.purdue.edu>
+Date:   Fri Oct 17 18:56:09 2014 -0400
+
+    fourth commit
+
+commit a3653bbf822eb56ace39b44d8572f44f9a1bb26c
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin6.ecn.purdue.edu>
+Date:   Thu Oct 16 18:02:20 2014 -0400
+
+    third commit
+
+commit 9812db8f71f5985cbc0609d39f291fda566e5b19
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin6.ecn.purdue.edu>
+Date:   Thu Oct 16 17:58:14 2014 -0400
+
+    second commit
+
+commit 1a60d2bd23421f2db2efbdc031742b86dd4cb10b
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Thu Oct 16 01:16:51 2014 -0400
+
+    first commit
+
+commit 8c5fe9ef9258be6a9528ed99372fd6a3e395e192
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Wed Oct 8 01:51:08 2014 -0400
+
+    all functions working fine
+
+commit 8b43d75c0b064cff11633122f48bb0f84b02a6fc
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Tue Oct 7 18:02:22 2014 -0400
+
+    odd and even is done
+
+commit 48d9372e59a1d8e8235d5b58c60cc115c3001dda
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Tue Oct 7 17:48:52 2014 -0400
+
+    even working fine
+
+commit f70504435483b3306b9b61c3dff5d4ed4cd12d18
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Tue Oct 7 17:46:22 2014 -0400
+
+    Decreasing, odd and even are done
+
+commit 2d863d584623220d41f3097907a5c9670396163d
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Mon Oct 6 18:20:48 2014 -0400
+
+    two functions working
+
+commit 4411a1a7d45031b4915494a1798310df0e136919
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Mon Oct 6 16:44:37 2014 -0400
+
+    First commit
+
+commit dd31b5f6275b21c00d0df7dff0e46632188a6a77
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Fri Oct 3 20:32:16 2014 -0400
+
+    testcases passed
+
+commit 07468d60fdd389eae51643cadfb7cd5d2052c81f
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Fri Oct 3 20:01:36 2014 -0400
+
+    homewrok done
+
+commit f3e0e407ae5791d8c2931eebce349b50c31d9545
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin3.ecn.purdue.edu>
+Date:   Wed Oct 1 19:03:34 2014 -0400
+
+    grep almost done
+
+commit 1141f7d76b4d11a89822a1a0dc96e843bfa831a8
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin3.ecn.purdue.edu>
+Date:   Wed Oct 1 18:55:25 2014 -0400
+
+    cat working now
+
+commit 85994d10b8514902b663d5b15d344d1b869d3286
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin3.ecn.purdue.edu>
+Date:   Wed Oct 1 18:52:25 2014 -0400
+
+    cat commit
+
+commit 9527dcf02b55bb0c0423282aee2575ffe9476411
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin3.ecn.purdue.edu>
+Date:   Wed Oct 1 18:47:22 2014 -0400
+
+    commit
+
+commit 35d9f3da98a84f15de0570dd08fef518e3b178bf
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin5.ecn.purdue.edu>
+Date:   Mon Sep 29 17:20:58 2014 -0400
+
+    everything working
+
+commit 6344f92408d2c8e2bf33411f85d8fcf4134f97ba
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Mon Sep 22 23:59:31 2014 -0400
+
+    Explode working
+
+commit 97bf6d177171522922e57265f4446809a50cbbc9
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Mon Sep 22 17:13:01 2014 -0400
+
+    2 valgrind errors for explode
+
+commit d5713c746bdbc95d4df1f78b3d080152e2388f20
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Mon Sep 22 16:16:18 2014 -0400
+
+    Sort functions done
+
+commit d29af9a98de1fa89872392f82abe6c6be654cc9e
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Thu Sep 18 18:59:46 2014 -0400
+
+    main.c working
+
+commit 22da2201bd6b6de94d34e4c99b97b5820ac98281
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Thu Sep 18 18:47:51 2014 -0400
+
+    First function working fine
+
+commit fb2366dc3990f3caa5735363640f74ec1b7c4072
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin4.ecn.purdue.edu>
+Date:   Wed Sep 17 18:57:36 2014 -0400
+
+    second function midway
+
+commit 8933cf59a99041e4d52d4073df3e54174b5092ac
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin4.ecn.purdue.edu>
+Date:   Wed Sep 17 17:27:16 2014 -0400
+
+    No valgrind errors
+
+commit 134ce4717b598b1301115e842ed57c0b1e73c8b1
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin6.ecn.purdue.edu>
+Date:   Mon Sep 15 16:14:13 2014 -0400
+
+    First function working
+
+commit e17e27ce476ee12041ac154190090cd020d7a16b
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin6.ecn.purdue.edu>
+Date:   Mon Sep 15 15:44:12 2014 -0400
+
+    free in pa03 and answer03
+
+commit 3c12ffa7623f26ba525a211d12ffdeec566d4a0a
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin6.ecn.purdue.edu>
+Date:   Mon Sep 15 15:41:15 2014 -0400
+
+    PA03 first push
+
+commit 7a4fbe2bd53bc4a9cbe3e9541c87217ef83728fb
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Wed Sep 10 02:01:17 2014 -0400
+
+    gdb and valgrind done
+
+commit ff87caf42a797844a33a9a3ce2a56edcea316e16
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Tue Sep 9 23:12:31 2014 -0400
+
+    code working
+
+commit 3b09b19462ac522aa999cb3e8515810085e4b092
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Tue Sep 9 21:29:44 2014 -0400
+
+    Last function due
+
+commit 261f222a8c968ddffbf85aa060405850bc0e6a43
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin5.ecn.purdue.edu>
+Date:   Mon Sep 8 18:00:44 2014 -0400
+
+    Three functions done
+
+commit 77372572f86b932e24f02acf328bbf6eebe515d6
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin5.ecn.purdue.edu>
+Date:   Mon Sep 8 16:47:09 2014 -0400
+
+    Start Homework
+
+commit 9b2fc576782604849547af2323a578e95be3eebe
+Author: Shubham Sandeep Rastogi <rastogis@ecegrid-thin1.ecn.purdue.edu>
+Date:   Fri Aug 29 18:10:36 2014 -0400
+
+    PA01 copied
+
+commit 8e1174f7802258d71626060957d9c84bab87d338
+Author: rastogishubham <rastogis@purdue.edu>
+Date:   Tue Aug 26 22:16:54 2014 -0400
+
+    Initial commit

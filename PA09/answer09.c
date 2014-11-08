@@ -75,11 +75,14 @@ BusinessNode * load_tree_from_file(char * filename)
 	{
 		return NULL;	
 	}
-	while(fgets(line, 2049, fp) != 0)
+	while(fgets(line, 2049, fp) != NULL)
 	{
 		char * * strArr = explode(line, delims, &len);
-		node = create_node(strArr[0], strArr[1], strArr[2]);
-		root = tree_insert(node, root);
+		if(len == 3)
+		{
+			node = create_node(strArr[0], strArr[1], strArr[2]);
+			root = tree_insert(node, root);
+		}
 		free(strArr);
 	}
 	fclose(fp);
