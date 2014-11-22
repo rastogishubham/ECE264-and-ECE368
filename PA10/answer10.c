@@ -14,7 +14,7 @@ typedef struct BusNode {
         struct BusNode * left;
         struct BusNode * right;
 } BusinessNode;
-LocationNode * createNode()
+LocationNode * createlocNode()
 {
         LocationNode * Node = malloc(sizeof(LocationNode));
         Node->next = NULL;
@@ -22,6 +22,53 @@ LocationNode * createNode()
 	Node->review_offset = 0;
         return(Node);
 }
+BusinessNode * create_node(char * business_name)
+{
+        BusinessNode * root = malloc(sizeof(BusinessNode));
+        root->name = strdup(business_name);
+	root->head = NULL;
+        root->left = NULL;
+        root->right = NULL;
+        return root;
+}
+void destroy_tree(BusinessNode * root)
+{
+        if(root == NULL){return;}
+        destroy_tree(root->left);
+        destroy_tree(root->right);
+        free(root->name);
+        free(root);
+}
+void print_tree(BusinessNode * root)
+{
+        if(root == NULL) {return;}
+        print_tree(root->left);
+        print_tree(root->right);
+        printf("%s\n", root->name);
+}
+
+BusinessNode * tree_insert(char * name, BusinessNode * root)
+{
+        if(root == NULL)
+        {
+                return create_node(name);
+        }
+        if(strcmp(name,root->name) < 0)
+        {
+                root->left = tree_insert(name, root->left);
+                return root;
+        }
+	else if(strcmp(name, root->name) == 0)
+	{
+		return root;
+	}
+	else
+	{
+        	root->right = tree_insert(name, root->right);
+        	return root;
+	}
+}
+
 char * * explode(const char * str, const char * delims, int * arrLen)
 {
         int N = 0;
@@ -71,16 +118,17 @@ void readfile(const char * business_path)
 	FILE * fp = fopen(business_path, "r");
 	if(fp == NULL)
 	{
-		printf("Failed to open file\n");
+	//	printf("Failed to open file\n");
 	}
 	else
 	{
-		printf("File can be opened\n");
+	//	printf("File can be opened\n");
 	}
 	char * buffer = malloc(sizeof(char) * BUFFER_SIZE);
 	long bus_offset = 0;
 	int len = 0;
 	int lcv = 0;
+	BusinessNode * root = NULL;
 	while(!feof(fp))
 	{
 		bus_offset = ftell(fp);
@@ -90,16 +138,18 @@ void readfile(const char * business_path)
 			break;
 		}
                 char * * strArr = explode(buffer, "\t", &len);
-                printf("Business name = %s\n", strArr[1]);
+          //      printf("Business name = %s\n", strArr[1]);
+		root = tree_insert(strArr[1], root);
 		for(lcv = 0; lcv < len; lcv ++)
 		{
 			free(strArr[lcv]);
 		}
 		free(strArr);
-		printf("Bus offset = %ld\n", bus_offset);
-                printf("Buffer = %s\n", buffer);
+	//	printf("Bus offset = %ld\n", bus_offset);
+          //      printf("Buffer = %s\n", buffer);
 	}
+	print_tree(root);
 	free(buffer);
-	fclose(fp);	
+	fclose(fp);
+	destroy_tree(root);
 }
-
