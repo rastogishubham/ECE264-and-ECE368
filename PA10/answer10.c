@@ -118,11 +118,11 @@ void readfile(const char * business_path)
 	FILE * fp = fopen(business_path, "r");
 	if(fp == NULL)
 	{
-	//	printf("Failed to open file\n");
+		printf("Failed to open file\n");
 	}
 	else
 	{
-	//	printf("File can be opened\n");
+		printf("File can be opened\n");
 	}
 	char * buffer = malloc(sizeof(char) * BUFFER_SIZE);
 	long bus_offset = 0;
@@ -138,15 +138,12 @@ void readfile(const char * business_path)
 			break;
 		}
                 char * * strArr = explode(buffer, "\t", &len);
-          //      printf("Business name = %s\n", strArr[1]);
 		root = tree_insert(strArr[1], root);
 		for(lcv = 0; lcv < len; lcv ++)
 		{
 			free(strArr[lcv]);
 		}
 		free(strArr);
-	//	printf("Bus offset = %ld\n", bus_offset);
-          //      printf("Buffer = %s\n", buffer);
 	}
 	print_tree(root);
 	free(buffer);
