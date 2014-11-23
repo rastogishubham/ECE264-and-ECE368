@@ -126,18 +126,22 @@ void readfile(const char * business_path)
 	}
 	char * buffer = malloc(sizeof(char) * BUFFER_SIZE);
 	long bus_offset = 0;
+	long int offset = 0;
 	int len = 0;
 	int lcv = 0;
+	offset = ftell(fp);
 	BusinessNode * root = NULL;
 	while(!feof(fp))
 	{
-		bus_offset = ftell(fp);
 		fgets(buffer, BUFFER_SIZE, fp);
 		if(feof(fp))
 		{
 			break;
 		}
                 char * * strArr = explode(buffer, "\t", &len);
+		bus_offset = strlen(strArr[0]) + strlen(strArr[1]) + offset + 2;
+		offset = ftell(fp);
+		printf("Offset = %ld\n", bus_offset);
 		root = tree_insert(strArr[1], root);
 		for(lcv = 0; lcv < len; lcv ++)
 		{
