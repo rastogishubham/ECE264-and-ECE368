@@ -14,29 +14,62 @@ typedef struct BusNode {
         struct BusNode * left;
         struct BusNode * right;
 } BusinessNode;
-LocationNode * createlocNode()
+LocationNode * createlocnode(long off)
 {
         LocationNode * Node = malloc(sizeof(LocationNode));
         Node->next = NULL;
-        Node->bus_offset = 0;
+        Node->bus_offset = off;
 	Node->review_offset = 0;
         return(Node);
 }
-BusinessNode * create_node(char * business_name)
+BusinessNode * create_node(char * business_name, long bus_offset)
 {
         BusinessNode * root = malloc(sizeof(BusinessNode));
         root->name = strdup(business_name);
-	root->head = NULL;
+	root->head = createlocnode(bus_offset);
         root->left = NULL;
         root->right = NULL;
         return root;
 }
+LocationNode * createlist(long bus_offset, LocationNode * head)
+{
+	if(head == NULL)
+	{
+		return createlocnode(bus_offset);
+	}
+		head->next = createlist(bus_offset, head->next);
+		return head;
+}
+void print_list(LocationNode * list)
+{
+	while(list != NULL)
+	{
+		LocationNode * p = list->next;
+		printf("The offset in list is %ld\n", list->bus_offset);
+		list = p;
+	}
+}
+
+// DESTROY FUNTION
+
+void List_destroy(LocationNode * list)
+{
+        while(list != NULL)
+        {
+                LocationNode * p = list->next;
+                free(list);
+                list = p;
+        }
+}
+
+
 void destroy_tree(BusinessNode * root)
 {
         if(root == NULL){return;}
         destroy_tree(root->left);
         destroy_tree(root->right);
         free(root->name);
+	List_destroy(root->head);
         free(root);
 }
 void print_tree(BusinessNode * root)
@@ -45,26 +78,37 @@ void print_tree(BusinessNode * root)
         print_tree(root->left);
         print_tree(root->right);
         printf("%s\n", root->name);
+	print_list(root->head);
 }
+/*void print_list(LocationNode * list)
+{
+	while(list != NULL)
+	{
+		LocationNode * p = list->next;
+		printf("The offset in list is %ld\n", list->bus_offset);
+		list = p;
+	}
+}*/
 
-BusinessNode * tree_insert(char * name, BusinessNode * root)
+BusinessNode * tree_insert(char * name, BusinessNode * root, long bus_offset)
 {
         if(root == NULL)
         {
-                return create_node(name);
+                return create_node(name, bus_offset);
         }
         if(strcmp(name,root->name) < 0)
         {
-                root->left = tree_insert(name, root->left);
+                root->left = tree_insert(name, root->left, bus_offset);
                 return root;
         }
 	else if(strcmp(name, root->name) == 0)
 	{
+		root->head = createlist(bus_offset, root->head);
 		return root;
 	}
 	else
 	{
-        	root->right = tree_insert(name, root->right);
+        	root->right = tree_insert(name, root->right, bus_offset);
         	return root;
 	}
 }
@@ -103,7 +147,7 @@ char * * explode(const char * str, const char * delims, int * arrLen)
         return(strArr);
 }
 
-void List_destroy(LocationNode * list)
+/*void List_destroy(LocationNode * list)
 {
         while(list != NULL)
         {
@@ -111,7 +155,7 @@ void List_destroy(LocationNode * list)
                 free(list);
                 list = p;
         }
-}
+}*/
 
 void readfile(const char * business_path)
 {
@@ -142,7 +186,7 @@ void readfile(const char * business_path)
 		bus_offset = strlen(strArr[0]) + strlen(strArr[1]) + offset + 2;
 		offset = ftell(fp);
 		printf("Offset = %ld\n", bus_offset);
-		root = tree_insert(strArr[1], root);
+		root = tree_insert(strArr[1], root,bus_offset);
 		for(lcv = 0; lcv < len; lcv ++)
 		{
 			free(strArr[lcv]);
