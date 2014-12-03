@@ -18,6 +18,15 @@ typedef struct BusNode {
         struct BusNode * right;
 } BusinessNode;
 
+struct YelpDataBST {
+	FILE * fp;
+	FILE * fp2;
+	BusinessNode * first_node;
+};
+
+struct YelpDataBST * create_yelp(FILE *, FILE *, BusinessNode *);
+void destroy_business_bst(struct YelpDataBST *);
+
 void destroy_strArr(char * * strArr, int len)
 {
   int ind;
@@ -56,14 +65,28 @@ LocationNode * createlist(long bus_offset, LocationNode * head, int count, long 
 }
 void print_list(LocationNode * list)
 {
+	char * str = malloc(sizeof(char) * 20000);
+	FILE * fp = fopen("reviews.tsv", "r");
 	while(list != NULL)
 	{
 		LocationNode * p = list->next;
-		printf("The offset in list is %ld\n", list->bus_offset);
-		printf("the review offset is %ld\n", list->review_offset);
-		printf("The number of reviews are %d\n", list->num_of_rev);
+		printf("The offset in list is %ld\n\n", list->bus_offset);
+		printf("the review offset is %ld\n\n", list->review_offset); 
+		printf("The number of reviews are %d\n\n", list->num_of_rev); 
+		if(list->review_offset != -1)
+		{
+			fseek(fp, list->review_offset, SEEK_SET);
+			if(fgets(str, 20000, fp) != NULL)
+			{
+				printf("%s\n\n", str);
+			}
+		}
+	//	printf("the review offset is %ld\n\n", list->review_offset);
+	//	printf("The number of reviews are %d\n\n", list->num_of_rev);
 		list = p;
 	}
+	free(str);
+	fclose(fp);
 }
 
 // DESTROY FUNTION
@@ -153,7 +176,7 @@ char * * explode(const char * str, const char * delims, int * arrLen)
         strArr[arrInd][ind - last] = '\0';
         return(strArr);
 }
-void readfile(const char * business_path, const char * reviews_path)
+struct YelpDataBST * create_business_bst(const char * business_path, const char * reviews_path)
 {
 	FILE * fp = fopen(business_path, "r");
 	FILE * fp2 = fopen(reviews_path, "r");
@@ -188,11 +211,15 @@ void readfile(const char * business_path, const char * reviews_path)
 		review_offset = 0;
 		destroy_strArr(strArr, len);
 	}
-	print_tree(root);
+//	print_tree(root);
 	free(buffer);
-	fclose(fp);
-	fclose(fp2);
-	destroy_tree(root);
+	struct YelpDataBST * yelp = create_yelp(fp, fp2, root);
+	fclose(fp_tmp);
+	return yelp;
+//	fclose(fp);
+//	fclose(fp2);
+//	fclose(fp_tmp);
+//	destroy_tree(root);
 }
 
 long get_reviews(int id, int * count, FILE * fp, FILE * fp_tmp)
@@ -227,10 +254,26 @@ long get_reviews(int id, int * count, FILE * fp, FILE * fp_tmp)
 		fgets(buffer, BUFFER_SIZE, fp_tmp);
 	}
 	printf("ftell fp = %ld, ftell fp_tmp = %ld\n", ftell(fp), ftell(fp_tmp));
-//	if(review_offset != -1)
-//	{
-		fseek(fp, ftell(fp_tmp), SEEK_SET);
-//	}
+	fseek(fp, ftell(fp_tmp), SEEK_SET);
 	free(buffer);
 	return review_offset;
+}
+struct YelpDataBST * create_yelp(FILE * fp, FILE * fp2, BusinessNode * node)
+{
+	struct YelpDataBST * root = malloc(sizeof(struct YelpDataBST));
+	root -> first_node = node;
+	root -> fp = fp;
+	root -> fp2 = fp2;
+	return root;
+}
+void destroy_business_bst(struct YelpDataBST * bst)
+{
+	destroy_tree(bst -> first_node);
+	fclose(bst -> fp);
+	fclose(bst -> fp2);
+	free(bst);
+}
+void print_bst(struct YelpDataBST * bst)
+{
+	print_tree(bst -> first_node);
 }
