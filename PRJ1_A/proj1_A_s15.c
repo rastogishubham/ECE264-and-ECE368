@@ -41,8 +41,9 @@ void Queue_destroy(Queue * queue)
 double calculate_r(double mu)
 {
 	double x = (double) rand() / RAND_MAX;
+	//printf("\n x = %f\n", x);
 	double r = (-1 / mu) * log(1 - x);
-	printf("\n Random R = %f\n", r);
+	//printf("\n Random R = %f\n", r);
 	return r;
 }
 
@@ -139,6 +140,54 @@ Queue * mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 	}
 	Queue_destroy(FEL2);
 	return FEL1;
+}
+
+void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
+{
+	int server_time = 0;
+	int total_time = 0;
+	Queue * temp_queue_0 = 0;
+	Queue * temp_queue_1 = 0;
+	int flag = 1;
+	while(total_tasks > 0)
+	{
+		if(total_time == FEL1 -> arr_time)
+		{
+			temp_queue_0 = create_list(0, FEL1 -> arr_time, FEL1 -> service_time, temp_queue_0);
+			if(flag == 1)
+			{
+				server_time = temp_queue_0 -> service_time;
+				flag = 0;
+				Queue * p = temp_queue_0 -> next;
+				free(temp_queue_0);
+				temp_queue_0 = p;
+			}
+			FEL1 = FEL1 -> next;
+		}
+		if(total_time == FEL2 -> arr_time)
+		{
+			temp_queue_1 = create_list(0, FEL2 -> arr_time, FEL2 -> service_time, temp_queue_1);
+			if(flag == 1 && temp_queue_0 == NULL)
+			{
+				server_time = temp_queue_1 -> service_time;
+				flag = 0;
+				Queue * p = temp_queue_1 -> next;
+				free(temp_queue_1);
+				temp_queue_1 = p;
+			}
+			FEL2 = FEL2 -> next;
+		}
+		total_time++;
+		if(flag == 0)
+		{
+			server_time--;
+			if(server_time == 0)
+			{
+				total_tasks--;
+				flag = 1;
+			}
+		}
+	}
 }
 
 void mode2(char * filename)
