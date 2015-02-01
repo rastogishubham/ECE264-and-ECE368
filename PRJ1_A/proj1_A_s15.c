@@ -117,7 +117,8 @@ Queue * mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 	double inter_arr_time = 0;
 	double service_time = 0;
 	double r = 0;
-	double tot_time;
+	double tot_time_0 = 0;
+	double tot_time_1 = 0;
 	Queue * FEL1 = NULL;
 	Queue * FEL2 = NULL;
 	for(lcv = 0; lcv < total_tasks / 2; lcv++)
@@ -126,7 +127,7 @@ Queue * mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 		inter_arr_time = calculate_inter_arrival_time(lambda_0, r);
 		r = calculate_r(mu);
 		service_time = calculate_service_time(mu, r);
-		tot_time += inter_arr_time;
+		tot_time_0 += inter_arr_time;
 		FEL1 = create_FEL(0, tot_time, service_time, FEL1);
 	}
 	for(lcv = 0; lcv < total_tasks / 2; lcv++)
@@ -135,7 +136,7 @@ Queue * mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 		inter_arr_time = calculate_inter_arrival_time(lambda_1, r);
 		r = calculate_r(mu);
 		service_time = calculate_service_time(mu, r);
-		tot_time += inter_arr_time;
+		tot_time_1 += inter_arr_time;
 		FEL2 = create_FEL(1, tot_time, service_time, FEL2);
 	}
 	Queue_destroy(FEL2);
@@ -149,15 +150,30 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 	Queue * temp_queue_0 = 0;
 	Queue * temp_queue_1 = 0;
 	int flag = 1;
+	int tot_service_time = 0;
+	double avg_CPU_util = 0;
+	double avg_queue_len = 0;
+	int queue_0_len = 0;
+	int queue_1_len = 0;
+	int tot_queue_len = 0;
+	int tot_wait_0 = 0;
+	int tot_wait_1 = 0;
+	double avg_wait_0 = 0;
+	double avg_wait_1 = 0;
 	while(total_tasks > 0)
 	{
+		queue_0_len = queue_len(temp_queue_0);
+		queue_1_len = queue_len(temp_queue_1);
+		tot_queue_len += queue_0_len + queue_1_len;
 		if(total_time == FEL1 -> arr_time)
 		{
 			temp_queue_0 = create_list(0, FEL1 -> arr_time, FEL1 -> service_time, temp_queue_0);
 			if(flag == 1)
 			{
 				server_time = temp_queue_0 -> service_time;
+				tot_service_time += server_time;
 				flag = 0;
+				tot_wait_0 += (total_time - temp_queue_0 -> arr_time);
 				Queue * p = temp_queue_0 -> next;
 				free(temp_queue_0);
 				temp_queue_0 = p;
@@ -170,7 +186,9 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 			if(flag == 1 && temp_queue_0 == NULL)
 			{
 				server_time = temp_queue_1 -> service_time;
+				tot_service_time += server_time;
 				flag = 0;
+				tot_wait_1 += (total_time - temp_queue_0 -> arr_time);
 				Queue * p = temp_queue_1 -> next;
 				free(temp_queue_1);
 				temp_queue_1 = p;
@@ -188,8 +206,22 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 			}
 		}
 	}
+	avg_CPU_util = tot_service_time / total_time;
+	avg_queue_len = tot_queue_len / (total_time + 1);
+	avg_wait_0 = tot_wait_0 / (total_tasks / 2);
+	avg_wait_1 = tot_wait_1 / (total_tasks / 2);
 }
 
+int queue_len(Queue * queue)
+{
+	int len = 0;
+	while(queue != NULL)
+	{
+		len++;
+		queue = queue -> next;
+	}
+	return len;
+}
 void mode2(char * filename)
 {
 	return;
