@@ -17,6 +17,8 @@ Queue * Queue_Node_Create(int priority, double arr_time, double service_time);
 double calculate_inter_arrival_time(double lambda, double r);
 int queue_len(Queue * queue);
 void simulator(Queue * FEL1, Queue * FEL2, int total_tasks);
+void write_mode_output(double avg_wait_0, double avg_wait_1, double avg_queue_len, double avg_CPU_util);
+void mode2(char * filename);
 
 Queue * Queue_Node_Create(int priority, double arr_time, double service_time)
 {
@@ -92,9 +94,9 @@ int main(int argc, char * * argv)
 //		list_print(FEL1);
 //		Queue_destroy(FEL1);
 	}
-	else
+	else if(argc == 2)
 	{
-		printf("Wrong input");
+		mode2(argv[1]);
 	}
 	return EXIT_SUCCESS;
 }
@@ -130,30 +132,32 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 	for(lcv = 0; lcv < total_tasks / 2; lcv++)
 	{
 		r = calculate_r(lambda_0);
-		printf("\nRandom R for lam 0 inter arr time%f\n", r);
+		printf("\nRandom R for lam 0 inter arr time%lf\n", r);
 		inter_arr_time = calculate_inter_arrival_time(lambda_0, r);
 		r = calculate_r(mu);
-		printf("\nRandom R for service time for 0 %f\n", r);
+		printf("\nRandom R for service time for 0 %lf\n", r);
 		service_time = calculate_service_time(mu, r);
 		tot_time_0 += inter_arr_time;
-		printf("\nArrival time of 0 %f\n", tot_time_0);
-		printf("\nService time of 0 %f\n", service_time);
+		printf("\nArrival time of 0 %lf\n", tot_time_0);
+		printf("\nService time of 0 %lf\n", service_time);
 		FEL1 = create_FEL(0, tot_time_0, service_time, FEL1);
 	}
 	for(lcv = 0; lcv < total_tasks / 2; lcv++)
 	{
 		r = calculate_r(lambda_1);
-                printf("\nRandom R for lam 1 inter arr time%f\n", r);
+                printf("\nRandom R for lam 1 inter arr time%lf\n", r);
 		inter_arr_time = calculate_inter_arrival_time(lambda_1, r);
 		r = calculate_r(mu);
-                printf("\nRandom R for service time for 1 %f\n", r);
+                printf("\nRandom R for service time for 1 %lf\n", r);
 		service_time = calculate_service_time(mu, r);
 		tot_time_1 += inter_arr_time;
-		printf("\nArrival time of 1 %f\n", tot_time_1);
-		printf("\nService time of 1 %f\n", service_time);
+		printf("\nArrival time of 1 %lf\n", tot_time_1);
+		printf("\nService time of 1 %lf\n", service_time);
 		FEL2 = create_FEL(1, tot_time_1, service_time, FEL2);
 	}
 	simulator(FEL1, FEL2, total_tasks);
+//	list_print(FEL1);
+//	list_print(FEL2);
 	Queue_destroy(FEL1);
 	Queue_destroy(FEL2);
 	return;
@@ -227,14 +231,28 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 	avg_queue_len = (double) tot_queue_len / (double) (total_time + 1);
 	avg_wait_0 = (double) tot_wait_0 / (double) (total_tasks_cpy / 2);
 	avg_wait_1 = (double) tot_wait_1 / (double) (total_tasks_cpy / 2);
+	
+	write_mode_output(avg_wait_0, avg_wait_1, avg_queue_len, avg_CPU_util);
+
 	printf("tot_wait_0 %d\n", tot_wait_0);
-	printf("avg wait for 0 %f\n", avg_wait_0);
+	printf("avg wait for 0 %lf\n", avg_wait_0);
         printf("tot_wait_1 %d\n", tot_wait_1);
-        printf("avg wait for 1 %f\n", avg_wait_1);
-	printf("avg cpu util %f\n", avg_CPU_util);
-        printf("avg queue len %f\n", avg_queue_len);
+        printf("avg wait for 1 %lf\n", avg_wait_1);
+	printf("avg cpu util %lf\n", avg_CPU_util);
+        printf("avg queue len %lf\n", avg_queue_len);
+	printf("total time of simulation: %d\n", total_time);
+	printf("total queue len: %d\n", tot_queue_len);
+}
 
-
+void write_mode_output(double avg_wait_0, double avg_wait_1, double avg_queue_len, double avg_CPU_util)
+{
+	FILE * fp;
+	fp = fopen("proj1-a_output", "w");
+	fprintf(fp, "%lf\n", avg_wait_0);
+	fprintf(fp, "%lf\n", avg_wait_1);
+	fprintf(fp, "%lf\n", avg_queue_len);
+	fprintf(fp, "%lf\n", avg_CPU_util);
+	fclose(fp);
 }
 
 int queue_len(Queue * queue)
@@ -249,5 +267,42 @@ int queue_len(Queue * queue)
 }
 void mode2(char * filename)
 {
+	int total_tasks = 0;
+	FILE * fp = NULL;
+	fp = fopen(filename, "r");
+	if(fp == NULL)
+	{
+		printf("Not opened file\n");
+		return;
+	}
+	char * str = malloc(sizeof(char *) * 10);
+	Queue * FEL1 = NULL;
+	Queue * FEL2 = NULL;
+	int priority = 0;
+	double arrival_time = 0;
+	double service_time = 0;
+	while(!feof(fp))
+	{
+		fscanf(fp, "%lf %d %lf", &arrival_time, &priority, &service_time);
+		if(priority == 0)
+		{
+			FEL1 = create_FEL(priority, arrival_time, service_time, FEL1);
+		}
+		else
+		{
+			FEL2 = create_FEL(priority, arrival_time, service_time, FEL2);
+		}
+		if(feof(fp))
+		{
+			break;
+		}
+		total_tasks++;
+	}
+	fclose(fp);
+//	printf("\n\n\n\n\n\n\nTotal tasks %d\n\n\n\n\n\n\n", total_tasks);
+	simulator(FEL1, FEL2, total_tasks);
+	free(str);
+	Queue_destroy(FEL1);
+	Queue_destroy(FEL2);
 	return;
 }
