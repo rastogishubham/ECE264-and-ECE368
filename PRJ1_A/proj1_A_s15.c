@@ -3,6 +3,7 @@
 #include<math.h>
 #include<string.h>
 #include<time.h>
+
 typedef struct Queue_Node
 {
 	double arr_time;
@@ -12,11 +13,11 @@ typedef struct Queue_Node
 }Queue;
 
 //fuction declarations
-void mode1(double lamda_0, double lambda_1, double mu, int total_tasks);
+void mode1(double lamda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1);
 Queue * Queue_Node_Create(int priority, double arr_time, double service_time);
 double calculate_inter_arrival_time(double lambda, double r);
 int queue_len(Queue * queue);
-void simulator(Queue * FEL1, Queue * FEL2, int total_tasks);
+void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1);
 void write_mode_output(double avg_wait_0, double avg_wait_1, double avg_queue_len, double avg_CPU_util);
 void mode2(char * filename);
 
@@ -89,8 +90,9 @@ int main(int argc, char * * argv)
 		double lambda_0 = atof(argv[1]);
 		double lambda_1 = atof(argv[2]);
 		double mu = atof(argv[3]);
-		int total_tasks = atoi(argv[4]) * 2;
-		mode1(lambda_0, lambda_1, mu, total_tasks);
+		int total_tasks0 = atoi(argv[4]);
+		int total_tasks1 = total_tasks0;
+		mode1(lambda_0, lambda_1, mu, total_tasks0, total_tasks1);
 //		list_print(FEL1);
 //		Queue_destroy(FEL1);
 	}
@@ -113,7 +115,7 @@ Queue * create_FEL(int priority, double arrival_time, double service_time, Queue
 	return FEL;
 }
 
-void mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
+void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1)
 {
 	if(lambda_0 + lambda_1 > mu)
 	{
@@ -129,7 +131,7 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 	Queue * FEL1 = NULL;
 	Queue * FEL2 = NULL;
 	srand(time(NULL));
-	for(lcv = 0; lcv < total_tasks / 2; lcv++)
+	for(lcv = 0; lcv < total_tasks0; lcv++)
 	{
 		r = calculate_r(lambda_0);
 		printf("\nRandom R for lam 0 inter arr time%lf\n", r);
@@ -142,7 +144,7 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 		printf("\nService time of 0 %lf\n", service_time);
 		FEL1 = create_FEL(0, tot_time_0, service_time, FEL1);
 	}
-	for(lcv = 0; lcv < total_tasks / 2; lcv++)
+	for(lcv = 0; lcv < total_tasks1; lcv++)
 	{
 		r = calculate_r(lambda_1);
                 printf("\nRandom R for lam 1 inter arr time%lf\n", r);
@@ -155,7 +157,7 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 		printf("\nService time of 1 %lf\n", service_time);
 		FEL2 = create_FEL(1, tot_time_1, service_time, FEL2);
 	}
-	simulator(FEL1, FEL2, total_tasks);
+	simulator(FEL1, FEL2, total_tasks0, total_tasks1);
 //	list_print(FEL1);
 //	list_print(FEL2);
 	Queue_destroy(FEL1);
@@ -163,7 +165,7 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks)
 	return;
 }
 
-void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
+void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1)
 {
 	int server_time = 0;
 	int total_time = 0;
@@ -180,16 +182,19 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 	int tot_wait_1 = 0;
 	double avg_wait_0 = 0;
 	double avg_wait_1 = 0;
+	int total_tasks = total_tasks0 + total_tasks1;
 	int total_tasks_cpy = total_tasks;
 	while(total_tasks > 0)
 	{
-		queue_0_len = queue_len(temp_queue_0);
-		queue_1_len = queue_len(temp_queue_1);
-		tot_queue_len += queue_0_len + queue_1_len;
+//		queue_0_len = queue_len(temp_queue_0);
+//		queue_1_len = queue_len(temp_queue_1);
+//		tot_queue_len += queue_0_len + queue_1_len;
 		if(FEL1 != NULL && total_time == FEL1 -> arr_time)
 		{
 			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL1 -> service_time, temp_queue_0);
 			FEL1 = FEL1 -> next;
+	                queue_0_len = queue_len(temp_queue_0);
+			tot_queue_len += queue_0_len;
 		}
 		if(flag == 1 && temp_queue_0 != NULL)
 		{
@@ -205,6 +210,8 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 		{
 			temp_queue_1 = create_FEL(0, FEL2 -> arr_time, FEL2 -> service_time, temp_queue_1);
 			FEL2 = FEL2 -> next;
+	                queue_1_len = queue_len(temp_queue_1);
+			tot_queue_len += queue_1_len;
 		}
 		if(flag == 1 && temp_queue_0 == NULL && temp_queue_1 != NULL)
 		{
@@ -217,6 +224,7 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 			temp_queue_1 = p;
 		}
 		total_time++;
+//              tot_queue_len += queue_0_len + queue_1_len;
 		if(flag == 0)
 		{
 			server_time--;
@@ -228,9 +236,9 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks)
 		}
 	}
 	avg_CPU_util = (double) tot_service_time / (double) total_time;
-	avg_queue_len = (double) tot_queue_len / (double) (total_time + 1);
-	avg_wait_0 = (double) tot_wait_0 / (double) (total_tasks_cpy / 2);
-	avg_wait_1 = (double) tot_wait_1 / (double) (total_tasks_cpy / 2);
+	avg_queue_len = (double) tot_queue_len / (double) (total_tasks_cpy);
+	avg_wait_0 = (double) tot_wait_0 / (double) (total_tasks0);
+	avg_wait_1 = (double) tot_wait_1 / (double) (total_tasks1);
 	
 	write_mode_output(avg_wait_0, avg_wait_1, avg_queue_len, avg_CPU_util);
 
@@ -267,7 +275,8 @@ int queue_len(Queue * queue)
 }
 void mode2(char * filename)
 {
-	int total_tasks = 0;
+	int total_tasks0 = 0;
+	int total_tasks1 = 0;
 	FILE * fp = NULL;
 	fp = fopen(filename, "r");
 	if(fp == NULL)
@@ -284,23 +293,24 @@ void mode2(char * filename)
 	while(!feof(fp))
 	{
 		fscanf(fp, "%lf %d %lf", &arrival_time, &priority, &service_time);
-		if(priority == 0)
-		{
-			FEL1 = create_FEL(priority, arrival_time, service_time, FEL1);
-		}
-		else
-		{
-			FEL2 = create_FEL(priority, arrival_time, service_time, FEL2);
-		}
 		if(feof(fp))
 		{
 			break;
 		}
-		total_tasks++;
+		if(priority == 0)
+		{
+			FEL1 = create_FEL(priority, arrival_time, service_time, FEL1);
+			total_tasks0++;
+		}
+		else
+		{
+			FEL2 = create_FEL(priority, arrival_time, service_time, FEL2);
+			total_tasks1++;
+		}
 	}
 	fclose(fp);
 //	printf("\n\n\n\n\n\n\nTotal tasks %d\n\n\n\n\n\n\n", total_tasks);
-	simulator(FEL1, FEL2, total_tasks);
+	simulator(FEL1, FEL2, total_tasks0, total_tasks1);
 	free(str);
 	Queue_destroy(FEL1);
 	Queue_destroy(FEL2);
