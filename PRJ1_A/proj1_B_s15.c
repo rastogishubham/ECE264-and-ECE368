@@ -16,7 +16,9 @@ typedef struct Queue_Node
 //Function Declerations
 
 
-//Function Definations
+//Function Definitions
+
+// This is the main function. Functions mode1 and mode2 have been called in this function
 int main(int argc, char * argv)
 {
 	return EXIT_SUCCESS;
@@ -66,11 +68,18 @@ double calculate_inter_arrival_time(double lambda, double r)
 }
 
 // This function is used to calculate the service time - time it takes for the CPU to process a task
-double calculate_service_time(double mu, double r)
+double * create_subtasks_servicetimes(double mu, double r, int num_sub_tasks)
 {
-        double service_time = mu * exp(-mu * r);
-        service_time = ceil(service_time);
-        return service_time;
+	double * sub_tasks_time = malloc(sizeof(double *) * num_sub_tasks);
+	int lcv = 0;
+        double service_time = 0;
+	for(lcv = 0; lcv < num_sub_tasks; lcv++)
+	{
+		service_time = mu * exp(-mu * r);
+       		service_time = ceil(service_time);
+		sub_tasks_time[lcv] = service_time;
+	}
+        return sub_tasks_time;
 }
 
 //This function is used to calculate the number of sub tasks of a particular task
