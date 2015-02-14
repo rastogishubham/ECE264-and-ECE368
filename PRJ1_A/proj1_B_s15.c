@@ -9,6 +9,7 @@ typedef struct Queue_Node
 {
         double arr_time;
         int priority;
+	int num_sub_tasks;
         double * sub_tasks_time;
         struct Queue_Node * next;
 }Queue;
@@ -21,6 +22,20 @@ typedef struct Queue_Node
 // This is the main function. Functions mode1 and mode2 have been called in this function
 int main(int argc, char * argv)
 {
+	if(argc == 5)
+        {
+		double lambda_0 = atof(argv[1]); // avg. arrival time of tasks with priority 0
+                double lambda_1 = atof(argv[2]); // avg. arrival time of tasks with priority 1
+                double mu = atof(argv[3]); // avg. service time of task
+                int total_tasks0 = atoi(argv[4]); // total tasks with priority 0
+                int total_tasks1 = total_tasks0; // total tasks with priority 1
+                mode1(lambda_0, lambda_1, mu, total_tasks0, total_tasks1); // Calling function mode1
+        }
+        else if(argc == 2)
+        {
+                mode2(argv[1]); //Calling function mode2
+        }
+
 	return EXIT_SUCCESS;
 }
 
@@ -31,6 +46,7 @@ Queue * Queue_Node_Create(int priority, double arr_time, int num_sub_tasks, doub
         Node -> next = NULL;
         Node -> priority = priority;
         Node -> arr_time = arr_time;
+	Node -> num_sub_tasks = num_sub_tasks;
         Node -> sub_tasks_time = malloc(sizeof(double *) * num_sub_tasks);
 	Node -> sub_tasks_time = sub_tasks_time;
         return Node;
@@ -89,3 +105,102 @@ int calculate_num_sub_tasks()
 	return num_sub_tasks;
 }
 
+// This function creates the queue by calling the Queue_Node_Create function
+Queue * create_FEL(int priority, double arrival_time, int num_sub_tasks, double * sub_tasks_time, Queue * FEL)
+{
+        if(FEL == NULL)
+        {
+                return Queue_Node_Create(priority, arrival_time, num_sub_tasks, sub_tasks_time);
+        }
+        FEL -> next = create_FEL(priority, arrival_time, num_sub_tasks, sub_tasks_time, FEL -> next);
+        return FEL;
+}
+
+// This function creates the future event lists for both tasks. Each node of the list has the calculated arrival times, service times and the priority for each tasks
+void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1)
+{
+        if(lambda_0 + lambda_1 > mu)
+        {
+                printf("Enter values so that lambda_1 + lambda_0 is less than mu\n");
+                return;
+        }
+        int lcv = 0; // loop counter variable
+	int num_sub_tasks = 0;
+	int tot_sub_tasks = 0;
+        double inter_arr_time = 0; // setting inter arrival time to 0
+        double * sub_tasks_time = NULL; // setting service arrival time to 0
+        double r = 0; // setting the variable r to 0
+        double tot_time_0 = 0; // setting total time for tasks with priority 0 to 0
+        double tot_time_1 = 0; // setting total time for tasks with priority 1 to 0
+        Queue * FEL1 = NULL; //future event list for task 0 with priority
+        Queue * FEL2 = NULL; // future event list for task 1 with priority
+        srand(time(NULL));
+        for(lcv = 0; lcv < total_tasks0; lcv++) // creates the future event list for task with 0 priority by calling the create_FEL function
+        {
+		num_sub_tasks = calculate_num_sub_tasks();
+                r = calculate_r(lambda_0);
+                inter_arr_time = calculate_inter_arrival_time(lambda_0, r);
+                r = calculate_r(mu);
+                sub_tasks_time = create_subtasks_servicetimes(mu, r, num_sub_tasks);
+                tot_time_0 += inter_arr_time;
+		tot_sub_tasks += num_sub_tasks;
+                FEL1 = create_FEL(0, tot_time_0, num_sub_tasks, sub_tasks_time, FEL1);
+        }
+        for(lcv = 0; lcv < total_tasks1; lcv++) // creates the future event list for task with 1 priority by calling the create_FEL function
+        {
+		num_sub_tasks = calculate_num_sub_tasks;
+                r = calculate_r(lambda_1);
+                inter_arr_time = calculate_inter_arrival_time(lambda_1, r);
+                r = calculate_r(mu);
+                sub_tasks_time = create_subtasks_servicetimes(mu, r, num_sub_tasks);
+                tot_time_1 += inter_arr_time;
+		tot_sub_tasks += num_sub_tasks;
+                FEL2 = create_FEL(1, tot_time_1, num_sub_tasks, sub_tasks_time, FEL2);
+        }
+        simulator(FEL1, FEL2, total_tasks0, total_tasks1); // Calling the simulator function with created future event lists
+        Queue_destroy(FEL1); // destroy the future event list of task with priority 0
+        Queue_destroy(FEL2); // destroy the future event list of task with priority 1
+        return;
+}
+
+int calc_free_processors(int * processors)
+{
+	int lcv = 0;
+	int free_processors = 0;
+	for(lcv = 0; lcv < 64; lcv++)
+	{
+		if(processors[i] != 0)
+		{
+			free_processors++;
+		}
+	}
+	return free_processors;
+}
+
+void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks)
+{
+	int * processors = malloc(sizeof(int *) * 64);
+	int total_time = 0;
+	int free_processors = 0;
+	Queue * temp_queue_0 = NULL;
+	Queue * temp_queue_1 = NULL;
+	Queue * head = NULL;
+	Queue * tail1 = NULL;
+	Queue * tail2 = NULL;
+	while(tot_sub_tasks > 0)
+	{
+		if(FEL1 != NULL && total_time == FEl1 -> arr_time)
+		{
+			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL -> num_sub_tasks, FEL -> sub_tasks_time, temp_queue_0);
+			FEL1 = FEL1 -> next;
+		}
+		free_processors = calc_free_processors(processors);
+		head = temp_queue_0;
+		tail1 = head -> next;
+		tail2 = tail1 -> next;
+		while(head != NULL)
+		{
+			
+		
+	}
+}
