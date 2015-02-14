@@ -177,6 +177,44 @@ int calc_free_processors(int * processors)
 	return free_processors;
 }
 
+Queue * pop_node(Queue * node, int queue_node_pos)
+{
+	if(queue_node_pos == 0)
+	{
+		Queue * temp = node;
+		node = node -> next;
+		free(temp);
+		return node;
+	}
+	Queue * prev = NULL;
+	while(queue_node_pos != 0)
+	{
+		prev = node;
+		node = node -> next;
+		queue_node_pos--;
+	}
+	prev -> next = node -> next;
+	free(node);
+	return prev;
+}
+
+int * reduce_service_time(int * processor, int * sub_tasks)
+{
+	int lcv = 0;
+	for(lcv = 0; lcv < 64; lcv++)
+	{
+		if(processor[lcv] > 0)
+		{
+			processor[lcv]--;
+		}
+		else
+		{
+			* sub_tasks = * sub_tasks - 1;
+		}
+	}
+	return processor;
+}
+	
 void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks)
 {
 	int * processors = malloc(sizeof(int *) * 64);
@@ -184,23 +222,71 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 	int free_processors = 0;
 	Queue * temp_queue_0 = NULL;
 	Queue * temp_queue_1 = NULL;
-	Queue * head = NULL;
-	Queue * tail1 = NULL;
-	Queue * tail2 = NULL;
+	Queue * head_0 = NULL;
+	Queue * head_1 = NULL;
+	int lcv = 0;
+	int sub_task_pos = 0;
+	int queue_node_pos_0 = 0;
+	int queue_node_pos_1 = 0;
 	while(tot_sub_tasks > 0)
 	{
 		if(FEL1 != NULL && total_time == FEl1 -> arr_time)
 		{
-			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL -> num_sub_tasks, FEL -> sub_tasks_time, temp_queue_0);
+			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL1 -> num_sub_tasks, FEL1 -> sub_tasks_time, temp_queue_0);
 			FEL1 = FEL1 -> next;
 		}
-		free_processors = calc_free_processors(processors);
-		head = temp_queue_0;
-		tail1 = head -> next;
-		tail2 = tail1 -> next;
-		while(head != NULL)
+		if(FEL2 != NULL && total_time == FEL2 -> arr_time)
 		{
-			
-		
+			temp_queue_1 = create_FEL(1, FEL2 -> arr_time, FEL2 -> num_sub_tasks, FEL2 -> sub_tasks_time, temp_queue_1);
+			FEL2 = FEL -> next;
+		}
+		free_processors = calc_free_processors(processors);
+		head_0 = temp_queue_0;
+		head_1 = temp_queue_1;
+		while(free_processors > 0 && (head_0 != NULL || head_1 != NULL))
+		{
+			free_processors = calc_free_processors(processors);
+			if(head_0 != NULL && head_0 -> num_sub_tasks <= free_processors)
+			{
+				for(lcv = 0; lcv < 64; lcv++)
+				{
+					if(processors[lcv] == 0)
+					{
+						processors[lcv] = head_0 -> sub_tasks_time[sub_task_pos];
+						sub_task_pos++;
+					}
+				}
+				head_0 = head_0 -> next;
+				temp_queue_0 = pop_node(temp_queue_0, queue_node_pos_0);
+			}
+			else if(head_0 != NULL && head_0 -> num_sub_tasks > free_processors)
+			{
+				head_0 = head_0 -> next;
+				queue_node_pos_0++;
+			}
+			sub_task_pos = 0;
+			free_processors = calc_free_processors(processors);
+			if(head_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks <= free_processors)
+			{
+				for(lcv = 0; lcv < 64; lcv++)
+				{
+					if(processors[lcv] == 0)
+					{
+						processors[lcv] = head_1 -> sub_tasks_time[sub_task_pos];
+						sub_task_pos++;
+					}
+				}
+				head_1 = head_1 -> next;
+				temp_queue_1 = pop_node(temp_queue_1, queue_node_pos_1);
+			}
+			else if(head_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks > free_processors)
+			{
+				head_1 = head_1 -> next;
+				queue_node_pos_1++;
+			}
+			sub_tasks_pos = 0;
+		}
+		total_time++
+		processors = reduce_service_time(processors, &num_sub_tasks);
 	}
 }
