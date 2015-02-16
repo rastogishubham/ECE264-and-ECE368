@@ -18,6 +18,7 @@ typedef struct Queue_Node
 void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks);
 void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1);
 double * create_subtasks_servicetimes(double mu, int num_sub_tasks);
+void mode2(char * filename);
 
 // This is the main function. Functions mode1 and mode2 have been called in this function
 int main(int argc, char * * argv)
@@ -31,10 +32,10 @@ int main(int argc, char * * argv)
                 int total_tasks1 = total_tasks0; // total tasks with priority 1
                 mode1(lambda_0, lambda_1, mu, total_tasks0, total_tasks1); // Calling function mode1
         }
-/*        else if(argc == 2)
+        else if(argc == 2)
         {
                 mode2(argv[1]); //Calling function mode2
-        }*/
+        }
 
 	return EXIT_SUCCESS;
 }
@@ -310,4 +311,66 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		}
 	}
 	free(processors);
+}
+
+void mode2(char * filename)
+{
+	FILE * fp = NULL;
+	Queue * FEL1 = NULL;
+	Queue * FEL2 = NULL;
+	double arrival_time = 0;
+	int priority = 0;
+	int num_sub_tasks = 0;
+	double * sub_tasks_time;
+	int lcv = 0;
+	int tot_sub_tasks = 0;
+	int total_tasks0 = 0;
+	int total_tasks1 = 0;	
+
+	fp = fopen(filename, "r"); //open file to read
+	if(fp == NULL)
+	{
+		printf("file not opened\n");
+		return;
+	}	
+
+	while(!feof(fp))
+	{
+		fscanf(fp, "%lf %d %d", &arrival_time, &priority, &num_sub_tasks);
+		if(feof(fp))
+		{
+			break;
+		}
+			
+		printf("\narrival time: %lf\n", arrival_time);
+		printf("priority: %d\n", priority);
+		printf("number of sub tasks: %d", num_sub_tasks);		
+
+		tot_sub_tasks += num_sub_tasks;
+		sub_tasks_time = malloc(sizeof(double) * num_sub_tasks);
+
+		for(lcv = 0; lcv < num_sub_tasks; lcv++)
+		{
+			fscanf(fp, " %lf", &sub_tasks_time[lcv]);
+			printf(" sub tasks time: %lf \n", sub_tasks_time[lcv]);
+		}
+		if(priority == 0)
+		{
+			FEL1 = create_FEL(priority, arrival_time, num_sub_tasks, FEL1, sub_tasks_time);
+			total_tasks0++;
+		}
+		else
+		{
+			FEL2 = create_FEL(priority, arrival_time, num_sub_tasks, FEL2, sub_tasks_time);
+			total_tasks1++;
+		}
+		
+	}
+
+	fclose(fp);
+//	simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks);
+	Queue_destroy(FEL1); // destroying the future event list for task 0
+	Queue_destroy(FEL2); // destroying future event list for task 1
+
+	return;
 }
