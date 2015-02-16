@@ -15,12 +15,12 @@ typedef struct Queue_Node
 }Queue;
 
 //Function Declerations
-
-
-//Function Definitions
+void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks);
+void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1);
+double * create_subtasks_servicetimes(double mu, int num_sub_tasks);
 
 // This is the main function. Functions mode1 and mode2 have been called in this function
-int main(int argc, char * argv)
+int main(int argc, char * * argv)
 {
 	if(argc == 5)
         {
@@ -31,10 +31,10 @@ int main(int argc, char * argv)
                 int total_tasks1 = total_tasks0; // total tasks with priority 1
                 mode1(lambda_0, lambda_1, mu, total_tasks0, total_tasks1); // Calling function mode1
         }
-        else if(argc == 2)
+/*        else if(argc == 2)
         {
                 mode2(argv[1]); //Calling function mode2
-        }
+        }*/
 
 	return EXIT_SUCCESS;
 }
@@ -47,8 +47,8 @@ Queue * Queue_Node_Create(int priority, double arr_time, int num_sub_tasks, doub
         Node -> priority = priority;
         Node -> arr_time = arr_time;
 	Node -> num_sub_tasks = num_sub_tasks;
-        Node -> sub_tasks_time = malloc(sizeof(double *) * num_sub_tasks);
-	Node -> sub_tasks_time = sub_tasks_time;
+        Node -> sub_tasks_time = malloc(sizeof(double) * num_sub_tasks);
+	Node -> sub_tasks_time = memcpy(Node -> sub_tasks_time, sub_tasks_time, (sizeof(double) * num_sub_tasks));
         return Node;
 }
 
@@ -84,13 +84,15 @@ double calculate_inter_arrival_time(double lambda, double r)
 }
 
 // This function is used to calculate the service time - time it takes for the CPU to process a task
-double * create_subtasks_servicetimes(double mu, double r, int num_sub_tasks)
+double * create_subtasks_servicetimes(double mu, int num_sub_tasks)
 {
-	double * sub_tasks_time = malloc(sizeof(double *) * num_sub_tasks);
+	double * sub_tasks_time = malloc(sizeof(double) * num_sub_tasks);
 	int lcv = 0;
         double service_time = 0;
+	double r = 0;
 	for(lcv = 0; lcv < num_sub_tasks; lcv++)
 	{
+		r = calculate_r(mu);
 		service_time = mu * exp(-mu * r);
        		service_time = ceil(service_time);
 		sub_tasks_time[lcv] = service_time;
@@ -101,18 +103,18 @@ double * create_subtasks_servicetimes(double mu, double r, int num_sub_tasks)
 //This function is used to calculate the number of sub tasks of a particular task
 int calculate_num_sub_tasks()
 {
-	int num_sub_tasks = rand() / RAND_MAX % 32 + 1;
+	int num_sub_tasks = rand()  % 2 + 1;
 	return num_sub_tasks;
 }
 
 // This function creates the queue by calling the Queue_Node_Create function
-Queue * create_FEL(int priority, double arrival_time, int num_sub_tasks, double * sub_tasks_time, Queue * FEL)
+Queue * create_FEL(int priority, double arrival_time, int num_sub_tasks, Queue * FEL, double * sub_tasks_time)
 {
         if(FEL == NULL)
         {
                 return Queue_Node_Create(priority, arrival_time, num_sub_tasks, sub_tasks_time);
         }
-        FEL -> next = create_FEL(priority, arrival_time, num_sub_tasks, sub_tasks_time, FEL -> next);
+        FEL -> next = create_FEL(priority, arrival_time, num_sub_tasks, FEL -> next, sub_tasks_time);
         return FEL;
 }
 
@@ -138,26 +140,28 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int to
         for(lcv = 0; lcv < total_tasks0; lcv++) // creates the future event list for task with 0 priority by calling the create_FEL function
         {
 		num_sub_tasks = calculate_num_sub_tasks();
+		printf("%d\n", num_sub_tasks);
                 r = calculate_r(lambda_0);
                 inter_arr_time = calculate_inter_arrival_time(lambda_0, r);
-                r = calculate_r(mu);
-                sub_tasks_time = create_subtasks_servicetimes(mu, r, num_sub_tasks);
+                sub_tasks_time = create_subtasks_servicetimes(mu, num_sub_tasks);
                 tot_time_0 += inter_arr_time;
 		tot_sub_tasks += num_sub_tasks;
-                FEL1 = create_FEL(0, tot_time_0, num_sub_tasks, sub_tasks_time, FEL1);
+                FEL1 = create_FEL(0, tot_time_0, num_sub_tasks, FEL1, sub_tasks_time);
+		free(sub_tasks_time);
         }
         for(lcv = 0; lcv < total_tasks1; lcv++) // creates the future event list for task with 1 priority by calling the create_FEL function
         {
-		num_sub_tasks = calculate_num_sub_tasks;
+		num_sub_tasks = calculate_num_sub_tasks();
                 r = calculate_r(lambda_1);
                 inter_arr_time = calculate_inter_arrival_time(lambda_1, r);
                 r = calculate_r(mu);
-                sub_tasks_time = create_subtasks_servicetimes(mu, r, num_sub_tasks);
+                sub_tasks_time = create_subtasks_servicetimes(mu, num_sub_tasks);
                 tot_time_1 += inter_arr_time;
 		tot_sub_tasks += num_sub_tasks;
-                FEL2 = create_FEL(1, tot_time_1, num_sub_tasks, sub_tasks_time, FEL2);
+                FEL2 = create_FEL(1, tot_time_1, num_sub_tasks, FEL2, sub_tasks_time);
+		free(sub_tasks_time);
         }
-        simulator(FEL1, FEL2, total_tasks0, total_tasks1); // Calling the simulator function with created future event lists
+        simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks); // Calling the simulator function with created future event lists
         Queue_destroy(FEL1); // destroy the future event list of task with priority 0
         Queue_destroy(FEL2); // destroy the future event list of task with priority 1
         return;
@@ -167,9 +171,9 @@ int calc_free_processors(int * processors)
 {
 	int lcv = 0;
 	int free_processors = 0;
-	for(lcv = 0; lcv < 64; lcv++)
+	for(lcv = 0; lcv < 4; lcv++)
 	{
-		if(processors[i] != 0)
+		if(processors[lcv] == 0)
 		{
 			free_processors++;
 		}
@@ -193,7 +197,14 @@ Queue * pop_node(Queue * node, int queue_node_pos)
 		node = node -> next;
 		queue_node_pos--;
 	}
-	prev -> next = node -> next;
+	if(node -> next == NULL)
+	{
+		prev -> next = NULL;
+	}
+	else
+	{
+		prev -> next = node -> next;
+	}
 	free(node);
 	return prev;
 }
@@ -201,15 +212,15 @@ Queue * pop_node(Queue * node, int queue_node_pos)
 int * reduce_service_time(int * processor, int * sub_tasks)
 {
 	int lcv = 0;
-	for(lcv = 0; lcv < 64; lcv++)
+	for(lcv = 0; lcv < 4; lcv++)
 	{
 		if(processor[lcv] > 0)
 		{
 			processor[lcv]--;
-		}
-		else
-		{
-			* sub_tasks = * sub_tasks - 1;
+			if(processor[lcv] == 0)
+			{
+				* sub_tasks = * sub_tasks - 1;
+			}
 		}
 	}
 	return processor;
@@ -217,28 +228,32 @@ int * reduce_service_time(int * processor, int * sub_tasks)
 	
 void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks)
 {
-	int * processors = malloc(sizeof(int *) * 64);
+	int * processors = malloc(sizeof(int) * 4);
+	int lcv = 0;
 	int total_time = 0;
 	int free_processors = 0;
 	Queue * temp_queue_0 = NULL;
 	Queue * temp_queue_1 = NULL;
 	Queue * head_0 = NULL;
 	Queue * head_1 = NULL;
-	int lcv = 0;
 	int sub_task_pos = 0;
 	int queue_node_pos_0 = 0;
 	int queue_node_pos_1 = 0;
+	for(lcv = 0; lcv < 4; lcv++)
+	{
+		processors[lcv] = 0;
+	}
 	while(tot_sub_tasks > 0)
 	{
-		if(FEL1 != NULL && total_time == FEl1 -> arr_time)
+		if(FEL1 != NULL && total_time == FEL1 -> arr_time)
 		{
-			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL1 -> num_sub_tasks, FEL1 -> sub_tasks_time, temp_queue_0);
+			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL1 -> num_sub_tasks, temp_queue_0, FEL1 -> sub_tasks_time);
 			FEL1 = FEL1 -> next;
 		}
 		if(FEL2 != NULL && total_time == FEL2 -> arr_time)
 		{
-			temp_queue_1 = create_FEL(1, FEL2 -> arr_time, FEL2 -> num_sub_tasks, FEL2 -> sub_tasks_time, temp_queue_1);
-			FEL2 = FEL -> next;
+			temp_queue_1 = create_FEL(1, FEL2 -> arr_time, FEL2 -> num_sub_tasks, temp_queue_1, FEL2 -> sub_tasks_time);
+			FEL2 = FEL2 -> next;
 		}
 		free_processors = calc_free_processors(processors);
 		head_0 = temp_queue_0;
@@ -246,9 +261,9 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		while(free_processors > 0 && (head_0 != NULL || head_1 != NULL))
 		{
 			free_processors = calc_free_processors(processors);
-			if(head_0 != NULL && head_0 -> num_sub_tasks <= free_processors)
+			if(temp_queue_0 != NULL && head_0 != NULL && head_0 -> num_sub_tasks <= free_processors)
 			{
-				for(lcv = 0; lcv < 64; lcv++)
+				for(lcv = 0; (lcv < 4 && lcv < head_0 -> num_sub_tasks); lcv++)
 				{
 					if(processors[lcv] == 0)
 					{
@@ -258,6 +273,7 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 				}
 				head_0 = head_0 -> next;
 				temp_queue_0 = pop_node(temp_queue_0, queue_node_pos_0);
+				printf("A");
 			}
 			else if(head_0 != NULL && head_0 -> num_sub_tasks > free_processors)
 			{
@@ -268,7 +284,7 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 			free_processors = calc_free_processors(processors);
 			if(head_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks <= free_processors)
 			{
-				for(lcv = 0; lcv < 64; lcv++)
+				for(lcv = 0; (lcv < 4 && lcv < head_1 -> num_sub_tasks); lcv++)
 				{
 					if(processors[lcv] == 0)
 					{
@@ -278,15 +294,20 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 				}
 				head_1 = head_1 -> next;
 				temp_queue_1 = pop_node(temp_queue_1, queue_node_pos_1);
+				printf("B");
 			}
 			else if(head_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks > free_processors)
 			{
 				head_1 = head_1 -> next;
 				queue_node_pos_1++;
 			}
-			sub_tasks_pos = 0;
+			sub_task_pos = 0;
 		}
-		total_time++
-		processors = reduce_service_time(processors, &num_sub_tasks);
+		total_time++;
+		if(free_processors <  4)
+		{
+			processors = reduce_service_time(processors, &tot_sub_tasks);
+		}
 	}
+	free(processors);
 }
