@@ -369,6 +369,7 @@ void mode2(char * filename)
 
 	fclose(fp);
 //	simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks);
+	free(sub_tasks_time);
 	Queue_destroy(FEL1); // destroying the future event list for task 0
 	Queue_destroy(FEL2); // destroying future event list for task 1
 
