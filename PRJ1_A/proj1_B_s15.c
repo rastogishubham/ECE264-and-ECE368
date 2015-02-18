@@ -91,6 +91,7 @@ double * create_subtasks_servicetimes(double mu, int num_sub_tasks)
 	int lcv = 0;
         double service_time = 0;
 	double r = 0;
+//	srand(time(NULL));
 	for(lcv = 0; lcv < num_sub_tasks; lcv++)
 	{
 		r = calculate_r(mu);
@@ -118,7 +119,31 @@ Queue * create_FEL(int priority, double arrival_time, int num_sub_tasks, Queue *
         FEL -> next = create_FEL(priority, arrival_time, num_sub_tasks, FEL -> next, sub_tasks_time);
         return FEL;
 }
-
+void printlist(Queue * FEL1, Queue * FEL2)
+{
+	int lcv = 0;
+	int lcv1 = 0;
+	for(lcv = 0; lcv < 3; lcv++)
+	{
+		printf("Job %d FEL1 -> arr_time %lf\n", lcv+1, FEL1 -> arr_time);
+		printf("Job %d FEL1 -> num_sub_tasks %d\n", lcv+1, FEL1->num_sub_tasks);
+		for(lcv1 = 0; lcv1 < FEL1 -> num_sub_tasks; lcv1++)
+		{
+			printf("Sub task num %d service time %lf\n", lcv1+1, FEL1 -> sub_tasks_time[lcv1]);
+		}
+		FEL1 = FEL1 -> next;
+	}
+        for(lcv = 0; lcv < 3; lcv++)
+        {
+                printf("Job %d FEL2 -> arr_time %lf\n", lcv+1, FEL2 -> arr_time);
+                printf("Job %d FEL2 -> num_sub_tasks %d\n", lcv+1, FEL2->num_sub_tasks);
+                for(lcv1 = 0; lcv1 < FEL2 -> num_sub_tasks; lcv1++)
+                {
+                        printf("Sub task num %d service time %lf\n", lcv1+1, FEL2 -> sub_tasks_time[lcv1]);
+                }
+		FEL2 = FEL2 -> next;
+        }
+}
 // This function creates the future event lists for both tasks. Each node of the list has the calculated arrival times, service times and the priority for each tasks
 void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1)
 {
@@ -162,6 +187,7 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int to
                 FEL2 = create_FEL(1, tot_time_1, num_sub_tasks, FEL2, sub_tasks_time);
 		free(sub_tasks_time);
         }
+	printlist(FEL1, FEL2);
         simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks); // Calling the simulator function with created future event lists
         Queue_destroy(FEL1); // destroy the future event list of task with priority 0
         Queue_destroy(FEL2); // destroy the future event list of task with priority 1
@@ -240,6 +266,7 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 	int sub_task_pos = 0;
 	int queue_node_pos_0 = 0;
 	int queue_node_pos_1 = 0;
+	int num_sub_tasks_cpy = 0;
 	for(lcv = 0; lcv < 4; lcv++)
 	{
 		processors[lcv] = 0;
@@ -259,17 +286,21 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		free_processors = calc_free_processors(processors);
 		head_0 = temp_queue_0;
 		head_1 = temp_queue_1;
+		queue_node_pos_0 = 0;
+		queue_node_pos_1 = 0;
 		while(free_processors > 0 && (head_0 != NULL || head_1 != NULL))
 		{
 			free_processors = calc_free_processors(processors);
-			if(temp_queue_0 != NULL && head_0 != NULL && head_0 -> num_sub_tasks <= free_processors)
+			if(head_0 != NULL && head_0 -> num_sub_tasks <= free_processors)
 			{
-				for(lcv = 0; (lcv < 4 && lcv < head_0 -> num_sub_tasks); lcv++)
+				num_sub_tasks_cpy = head_0 -> num_sub_tasks;
+				for(lcv = 0; (lcv < 4 && num_sub_tasks_cpy > 0); lcv++)
 				{
 					if(processors[lcv] == 0)
 					{
 						processors[lcv] = head_0 -> sub_tasks_time[sub_task_pos];
 						sub_task_pos++;
+						num_sub_tasks_cpy--;
 					}
 				}
 				head_0 = head_0 -> next;
@@ -283,14 +314,16 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 			}
 			sub_task_pos = 0;
 			free_processors = calc_free_processors(processors);
-			if(head_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks <= free_processors)
+			if(temp_queue_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks <= free_processors)
 			{
-				for(lcv = 0; (lcv < 4 && lcv < head_1 -> num_sub_tasks); lcv++)
+				num_sub_tasks_cpy = head_1 -> num_sub_tasks;
+				for(lcv = 0; (lcv < 4 && num_sub_tasks_cpy > 0); lcv++)
 				{
 					if(processors[lcv] == 0)
 					{
 						processors[lcv] = head_1 -> sub_tasks_time[sub_task_pos];
 						sub_task_pos++;
+						num_sub_tasks_cpy--;
 					}
 				}
 				head_1 = head_1 -> next;
@@ -305,6 +338,7 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 			sub_task_pos = 0;
 		}
 		total_time++;
+		free_processors = calc_free_processors(processors);
 		if(free_processors <  4)
 		{
 			processors = reduce_service_time(processors, &tot_sub_tasks);
@@ -368,7 +402,7 @@ void mode2(char * filename)
 	}
 
 	fclose(fp);
-//	simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks);
+	simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks);
 	free(sub_tasks_time);
 	Queue_destroy(FEL1); // destroying the future event list for task 0
 	Queue_destroy(FEL2); // destroying future event list for task 1
