@@ -122,31 +122,6 @@ Queue * create_FEL(int priority, double arrival_time, int num_sub_tasks, Queue *
         FEL -> next = create_FEL(priority, arrival_time, num_sub_tasks, FEL -> next, sub_tasks_time);
         return FEL;
 }
-void printlist(Queue * FEL1, Queue * FEL2)
-{
-	int lcv = 0;
-	int lcv1 = 0;
-	for(lcv = 0; lcv < 1000; lcv++)
-	{
-		printf("Job %d FEL1 -> arr_time %lf\n", lcv+1, FEL1 -> arr_time);
-		printf("Job %d FEL1 -> num_sub_tasks %d\n", lcv+1, FEL1->num_sub_tasks);
-		for(lcv1 = 0; lcv1 < FEL1 -> num_sub_tasks; lcv1++)
-		{
-			printf("Sub task num %d service time %lf\n", lcv1+1, FEL1 -> sub_tasks_time[lcv1]);
-		}
-		FEL1 = FEL1 -> next;
-	}
-        for(lcv = 0; lcv < 1000; lcv++)
-        {
-                printf("Job %d FEL2 -> arr_time %lf\n", lcv+1, FEL2 -> arr_time);
-                printf("Job %d FEL2 -> num_sub_tasks %d\n", lcv+1, FEL2->num_sub_tasks);
-                for(lcv1 = 0; lcv1 < FEL2 -> num_sub_tasks; lcv1++)
-                {
-                        printf("Sub task num %d service time %lf\n", lcv1+1, FEL2 -> sub_tasks_time[lcv1]);
-                }
-		FEL2 = FEL2 -> next;
-        }
-}
 // This function creates the future event lists for both tasks. Each node of the list has the calculated arrival times, service times and the priority for each tasks
 void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1)
 {
@@ -169,7 +144,6 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int to
         for(lcv = 0; lcv < total_tasks0; lcv++) // creates the future event list for task with 0 priority by calling the create_FEL function
         {
 		num_sub_tasks = calculate_num_sub_tasks();
-		printf("%d\n", num_sub_tasks);
                 r = calculate_r(lambda_0);
                 inter_arr_time = calculate_inter_arrival_time(lambda_0, r);
                 sub_tasks_time = create_subtasks_servicetimes(mu, num_sub_tasks);
@@ -190,7 +164,6 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int to
                 FEL2 = create_FEL(1, tot_time_1, num_sub_tasks, FEL2, sub_tasks_time);
 		free(sub_tasks_time);
         }
-//	printlist(FEL1, FEL2);
         simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks); // Calling the simulator function with created future event lists
         Queue_destroy(FEL1); // destroy the future event list of task with priority 0
         Queue_destroy(FEL2); // destroy the future event list of task with priority 1
@@ -256,14 +229,6 @@ int * reduce_service_time(int * processor, int * sub_tasks)
 	return processor;
 }
 
-void print_processor(int * processors)
-{
-	int lcv = 0;
-	for(lcv = 0; lcv < 64; lcv++)
-	{
-		printf("processor index %d = %d\n", lcv, processors[lcv]);
-	}
-}
 
 
 void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks)
@@ -376,8 +341,6 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		if(free_processors < 64)
 		{
 			processors = reduce_service_time(processors, &tot_sub_tasks);
-			print_processor(processors);
-			printf("\n tot sub tasks %d \n", tot_sub_tasks);
 		}
 	}
 	free(processors);
@@ -416,10 +379,6 @@ void mode2(char * filename)
 			break;
 		}
 			
-		printf("\narrival time: %lf\n", arrival_time);
-		printf("priority: %d\n", priority);
-		printf("number of sub tasks: %d", num_sub_tasks);		
-
 		tot_sub_tasks += num_sub_tasks;
 		sub_tasks_time = malloc(sizeof(double) * num_sub_tasks);
 
