@@ -19,6 +19,9 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int total_tasks1);
 double * create_subtasks_servicetimes(double mu, int num_sub_tasks);
 void mode2(char * filename);
+void calculate_max_min(double * max, double * min, double * sub_tasks_time, int num_sub_tasks);
+int queue_len(Queue * queue);
+void write_mode_output(double avg_wait_0, double avg_wait_1, double avg_queue_len, double avg_CPU_util);
 
 // This is the main function. Functions mode1 and mode2 have been called in this function
 int main(int argc, char * * argv)
@@ -123,7 +126,7 @@ void printlist(Queue * FEL1, Queue * FEL2)
 {
 	int lcv = 0;
 	int lcv1 = 0;
-	for(lcv = 0; lcv < 50000; lcv++)
+	for(lcv = 0; lcv < 1000; lcv++)
 	{
 		printf("Job %d FEL1 -> arr_time %lf\n", lcv+1, FEL1 -> arr_time);
 		printf("Job %d FEL1 -> num_sub_tasks %d\n", lcv+1, FEL1->num_sub_tasks);
@@ -133,7 +136,7 @@ void printlist(Queue * FEL1, Queue * FEL2)
 		}
 		FEL1 = FEL1 -> next;
 	}
-        for(lcv = 0; lcv < 50000; lcv++)
+        for(lcv = 0; lcv < 1000; lcv++)
         {
                 printf("Job %d FEL2 -> arr_time %lf\n", lcv+1, FEL2 -> arr_time);
                 printf("Job %d FEL2 -> num_sub_tasks %d\n", lcv+1, FEL2->num_sub_tasks);
@@ -187,7 +190,7 @@ void mode1(double lambda_0, double lambda_1, double mu, int total_tasks0, int to
                 FEL2 = create_FEL(1, tot_time_1, num_sub_tasks, FEL2, sub_tasks_time);
 		free(sub_tasks_time);
         }
-	printlist(FEL1, FEL2);
+//	printlist(FEL1, FEL2);
         simulator(FEL1, FEL2, total_tasks0, total_tasks1, tot_sub_tasks); // Calling the simulator function with created future event lists
         Queue_destroy(FEL1); // destroy the future event list of task with priority 0
         Queue_destroy(FEL2); // destroy the future event list of task with priority 1
@@ -215,6 +218,7 @@ Queue * pop_node(Queue * node, int queue_node_pos)
 	{
 		Queue * temp = node;
 		node = node -> next;
+		free(temp -> sub_tasks_time);
 		free(temp);
 		return node;
 	}
@@ -230,6 +234,7 @@ Queue * pop_node(Queue * node, int queue_node_pos)
 		prev = prev -> next;
 	}
 	prev -> next = temp -> next;
+	free(temp -> sub_tasks_time);
 	free(temp);
 	return node;
 }
@@ -260,12 +265,19 @@ void print_processor(int * processors)
 	}
 }
 
+
 void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks)
 {
 	int * processors = malloc(sizeof(int) * 64);
+	long int tot_service_time = 0;
 	int lcv = 0;
 	int total_time = 0;
 	int free_processors = 0;
+	int queue_len_0 = 0;
+	int queue_len_1 = 0;
+	int tot_queue_len = 0;
+	int tot_wait_0 = 0;
+	int tot_wait_1 = 0; 
 	Queue * temp_queue_0 = NULL;
 	Queue * temp_queue_1 = NULL;
 	Queue * head_0 = NULL;
@@ -274,7 +286,10 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 	int queue_node_pos_0 = 0;
 	int queue_node_pos_1 = 0;
 	int num_sub_tasks_cpy = 0;
-	int num_jobs = 0;
+	double avg_queue_len = 0;
+	double avg_wait_0 = 0;
+	double avg_wait_1 = 0;
+	long double global_avg_CPU_util = 0;
 	for(lcv = 0; lcv < 64; lcv++)
 	{
 		processors[lcv] = 0;
@@ -285,12 +300,15 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		{
 			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL1 -> num_sub_tasks, temp_queue_0, FEL1 -> sub_tasks_time);
 			FEL1 = FEL1 -> next;
-			num_jobs++;
+			queue_len_0 = queue_len(temp_queue_0);
+			tot_queue_len += queue_len_0;
 		}
 		if(FEL2 != NULL && total_time == FEL2 -> arr_time)
 		{
 			temp_queue_1 = create_FEL(1, FEL2 -> arr_time, FEL2 -> num_sub_tasks, temp_queue_1, FEL2 -> sub_tasks_time);
 			FEL2 = FEL2 -> next;
+			queue_len_1 = queue_len(temp_queue_1);
+			tot_queue_len += queue_len_1;
 		}
 		free_processors = calc_free_processors(processors);
 		head_0 = temp_queue_0;
@@ -308,10 +326,12 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 					if(processors[lcv] == 0)
 					{
 						processors[lcv] = head_0 -> sub_tasks_time[sub_task_pos];
+						tot_service_time += processors[lcv];
 						sub_task_pos++;
 						num_sub_tasks_cpy--;
 					}
 				}
+				tot_wait_0 += (total_time - head_0 -> arr_time);
 				head_0 = head_0 -> next;
 				temp_queue_0 = pop_node(temp_queue_0, queue_node_pos_0);
 				sub_task_pos = 0;
@@ -334,10 +354,12 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 					if(processors[lcv] == 0)
 					{
 						processors[lcv] = head_1 -> sub_tasks_time[sub_task_pos];
+						tot_service_time += processors[lcv];
 						sub_task_pos++;
 						num_sub_tasks_cpy--;
 					}
 				}
+				tot_wait_1 += (total_time - head_1 -> arr_time);
 				head_1 = head_1 -> next;
 				temp_queue_1 = pop_node(temp_queue_1, queue_node_pos_1);
 				sub_task_pos = 0;
@@ -359,6 +381,11 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		}
 	}
 	free(processors);
+	avg_queue_len = (double) tot_queue_len / (double) (total_tasks0 + total_tasks1);
+	avg_wait_0 = (double) tot_wait_0 / (double) (total_tasks0);
+	avg_wait_1 = (double) tot_wait_1 / (double) (total_tasks1);
+	global_avg_CPU_util = (double) tot_service_time  / (double) (total_time * 64);
+	write_mode_output(avg_wait_0, avg_wait_1, avg_queue_len, global_avg_CPU_util);
 }
 
 void mode2(char * filename)
@@ -374,7 +401,6 @@ void mode2(char * filename)
 	int tot_sub_tasks = 0;
 	int total_tasks0 = 0;
 	int total_tasks1 = 0;	
-
 	fp = fopen(filename, "r"); //open file to read
 	if(fp == NULL)
 	{
@@ -400,7 +426,6 @@ void mode2(char * filename)
 		for(lcv = 0; lcv < num_sub_tasks; lcv++)
 		{
 			fscanf(fp, " %lf", &sub_tasks_time[lcv]);
-			printf(" sub tasks time: %lf \n", sub_tasks_time[lcv]);
 		}
 		if(priority == 0)
 		{
@@ -423,3 +448,29 @@ void mode2(char * filename)
 
 	return;
 }
+
+int queue_len(Queue * queue)
+{
+        int len = 0;
+        while(queue != NULL)
+        {
+                len++;
+                queue = queue -> next;
+        }
+        return len;
+}
+
+void write_mode_output(double avg_wait_0, double avg_wait_1, double avg_queue_len, double global_avg_CPU_util)
+{
+        FILE * fp;
+
+        fp = fopen("proj1_output", "w"); //open file to write
+
+        fprintf(fp, "%lf\n", avg_wait_0);
+        fprintf(fp, "%lf\n", avg_wait_1);
+        fprintf(fp, "%lf\n", avg_queue_len);
+        fprintf(fp, "%lf\n", global_avg_CPU_util);
+        fclose(fp);
+}
+
+
