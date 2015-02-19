@@ -105,7 +105,7 @@ double * create_subtasks_servicetimes(double mu, int num_sub_tasks)
 //This function is used to calculate the number of sub tasks of a particular task
 int calculate_num_sub_tasks()
 {
-	int num_sub_tasks = rand()  % 2 + 1;
+	int num_sub_tasks = rand()  % 32 + 1;
 	return num_sub_tasks;
 }
 
@@ -123,7 +123,7 @@ void printlist(Queue * FEL1, Queue * FEL2)
 {
 	int lcv = 0;
 	int lcv1 = 0;
-	for(lcv = 0; lcv < 3; lcv++)
+	for(lcv = 0; lcv < 50000; lcv++)
 	{
 		printf("Job %d FEL1 -> arr_time %lf\n", lcv+1, FEL1 -> arr_time);
 		printf("Job %d FEL1 -> num_sub_tasks %d\n", lcv+1, FEL1->num_sub_tasks);
@@ -133,7 +133,7 @@ void printlist(Queue * FEL1, Queue * FEL2)
 		}
 		FEL1 = FEL1 -> next;
 	}
-        for(lcv = 0; lcv < 3; lcv++)
+        for(lcv = 0; lcv < 50000; lcv++)
         {
                 printf("Job %d FEL2 -> arr_time %lf\n", lcv+1, FEL2 -> arr_time);
                 printf("Job %d FEL2 -> num_sub_tasks %d\n", lcv+1, FEL2->num_sub_tasks);
@@ -198,7 +198,7 @@ int calc_free_processors(int * processors)
 {
 	int lcv = 0;
 	int free_processors = 0;
-	for(lcv = 0; lcv < 4; lcv++)
+	for(lcv = 0; lcv < 64; lcv++)
 	{
 		if(processors[lcv] == 0)
 		{
@@ -210,6 +210,7 @@ int calc_free_processors(int * processors)
 
 Queue * pop_node(Queue * node, int queue_node_pos)
 {
+	
 	if(queue_node_pos == 0)
 	{
 		Queue * temp = node;
@@ -218,28 +219,25 @@ Queue * pop_node(Queue * node, int queue_node_pos)
 		return node;
 	}
 	Queue * prev = NULL;
+	prev = node;
+	Queue * temp = node;
+	queue_node_pos--;
+	temp  = temp -> next;
 	while(queue_node_pos != 0)
 	{
-		prev = node;
-		node = node -> next;
+		temp = temp -> next;
 		queue_node_pos--;
+		prev = prev -> next;
 	}
-	if(node -> next == NULL)
-	{
-		prev -> next = NULL;
-	}
-	else
-	{
-		prev -> next = node -> next;
-	}
-	free(node);
-	return prev;
+	prev -> next = temp -> next;
+	free(temp);
+	return node;
 }
 
 int * reduce_service_time(int * processor, int * sub_tasks)
 {
 	int lcv = 0;
-	for(lcv = 0; lcv < 4; lcv++)
+	for(lcv = 0; lcv < 64; lcv++)
 	{
 		if(processor[lcv] > 0)
 		{
@@ -252,10 +250,19 @@ int * reduce_service_time(int * processor, int * sub_tasks)
 	}
 	return processor;
 }
-	
+
+void print_processor(int * processors)
+{
+	int lcv = 0;
+	for(lcv = 0; lcv < 64; lcv++)
+	{
+		printf("processor index %d = %d\n", lcv, processors[lcv]);
+	}
+}
+
 void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, int tot_sub_tasks)
 {
-	int * processors = malloc(sizeof(int) * 4);
+	int * processors = malloc(sizeof(int) * 64);
 	int lcv = 0;
 	int total_time = 0;
 	int free_processors = 0;
@@ -267,7 +274,8 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 	int queue_node_pos_0 = 0;
 	int queue_node_pos_1 = 0;
 	int num_sub_tasks_cpy = 0;
-	for(lcv = 0; lcv < 4; lcv++)
+	int num_jobs = 0;
+	for(lcv = 0; lcv < 64; lcv++)
 	{
 		processors[lcv] = 0;
 	}
@@ -277,6 +285,7 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		{
 			temp_queue_0 = create_FEL(0, FEL1 -> arr_time, FEL1 -> num_sub_tasks, temp_queue_0, FEL1 -> sub_tasks_time);
 			FEL1 = FEL1 -> next;
+			num_jobs++;
 		}
 		if(FEL2 != NULL && total_time == FEL2 -> arr_time)
 		{
@@ -288,13 +297,13 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		head_1 = temp_queue_1;
 		queue_node_pos_0 = 0;
 		queue_node_pos_1 = 0;
-		while(free_processors > 0 && (head_0 != NULL || head_1 != NULL))
+		while(free_processors > 0 && head_0 != NULL)
 		{
 			free_processors = calc_free_processors(processors);
 			if(head_0 != NULL && head_0 -> num_sub_tasks <= free_processors)
 			{
 				num_sub_tasks_cpy = head_0 -> num_sub_tasks;
-				for(lcv = 0; (lcv < 4 && num_sub_tasks_cpy > 0); lcv++)
+				for(lcv = 0; (lcv < 64 && num_sub_tasks_cpy > 0); lcv++)
 				{
 					if(processors[lcv] == 0)
 					{
@@ -305,19 +314,22 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 				}
 				head_0 = head_0 -> next;
 				temp_queue_0 = pop_node(temp_queue_0, queue_node_pos_0);
-				printf("A");
+				sub_task_pos = 0;
 			}
 			else if(head_0 != NULL && head_0 -> num_sub_tasks > free_processors)
 			{
 				head_0 = head_0 -> next;
 				queue_node_pos_0++;
 			}
-			sub_task_pos = 0;
+		}
+		sub_task_pos = 0;
+		while(temp_queue_0 == NULL && free_processors > 0 && head_1 != NULL)
+		{
 			free_processors = calc_free_processors(processors);
 			if(temp_queue_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks <= free_processors)
 			{
 				num_sub_tasks_cpy = head_1 -> num_sub_tasks;
-				for(lcv = 0; (lcv < 4 && num_sub_tasks_cpy > 0); lcv++)
+				for(lcv = 0; (lcv < 64 && num_sub_tasks_cpy > 0); lcv++)
 				{
 					if(processors[lcv] == 0)
 					{
@@ -328,7 +340,7 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 				}
 				head_1 = head_1 -> next;
 				temp_queue_1 = pop_node(temp_queue_1, queue_node_pos_1);
-				printf("B");
+				sub_task_pos = 0;
 			}
 			else if(head_0 == NULL && head_1 != NULL && head_1 -> num_sub_tasks > free_processors)
 			{
@@ -339,9 +351,11 @@ void simulator(Queue * FEL1, Queue * FEL2, int total_tasks0, int total_tasks1, i
 		}
 		total_time++;
 		free_processors = calc_free_processors(processors);
-		if(free_processors <  4)
+		if(free_processors < 64)
 		{
 			processors = reduce_service_time(processors, &tot_sub_tasks);
+			print_processor(processors);
+			printf("\n tot sub tasks %d \n", tot_sub_tasks);
 		}
 	}
 	free(processors);
