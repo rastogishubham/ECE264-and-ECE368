@@ -12,6 +12,8 @@ double * * create_lab_matrix(double * * ulab_matrix, int size, double l_max, dou
 void query1(double * * lab_matrix, int size, int source);
 void query3(double * * lab_matrix, int size, int source);
 void get_input(int * size, double * delta_1, double * delta_2, int * source, double * alpha, FILE * fp);
+void query5(double * * lab_matrix, int size);
+void query6(double * * lab_matrix, int size, int source);
 int main(int argc, char * * argv)
 {
 	double * * ulab_matrix = NULL;
@@ -48,6 +50,8 @@ int main(int argc, char * * argv)
 	//query1(sparse_graph, size, source);
 	query3(dense_graph, size, source);
 	//query3(sparse_graph, size, source);
+	query5(dense_graph, size);
+	query6(dense_graph, size, source);
 	destroy_arr(age, gender, m_status, race, birth, lang, occupation, income);
 	destroy_matrix(ulab_matrix, size);
 	destroy_matrix(dense_graph, size);
@@ -108,8 +112,6 @@ double * * create_u_lab(long int size, int * age, int * gender, int * m_status, 
 		{
 			ulab_matrix[row][col] = pow((age[row] - age[col]), 2) + pow((gender[row] - gender[col]), 2) + pow((m_status[row] - m_status[col]), 2) + pow((race[row] - race[col]), 2) + pow((birth[row] - birth[col]), 2) + pow((lang[row] - lang[col]), 2) + pow((occupation[row] - occupation[col]), 2) + pow((income[row] - income[col]), 2);
 			ulab_matrix[row][col] = sqrt(ulab_matrix[row][col]);
-			ulab_matrix[row][col] = (int) (ulab_matrix[row][col] * 100);
-			ulab_matrix[row][col] = ulab_matrix[row][col] / 100;
 			if(row == 0 && col == 0)
 				* l_max = ulab_matrix[row][col];
 			if(ulab_matrix[row][col] > * l_max)
@@ -197,4 +199,47 @@ void get_input(int * size, double * delta_1, double * delta_2, int * source, dou
 	* delta_2 = delta2_tmp;
 	* source = source_tmp;
 	* alpha = alpha_tmp;
+}
+void query5(double * * lab_matrix, int size)
+{
+	double query_5 = 0.0;
+	int ctr = 0;
+	int lcv = 0;
+	int lcv2 = 0;
+	for(lcv2 = 0; lcv2 < size; lcv2++)
+	{
+		for(lcv = 0; lcv < size; lcv++)
+		{
+			if(lab_matrix[lcv2][lcv] != 0)
+			{
+				ctr++;
+			}
+		}
+	}
+	query_5 = ctr / 6;
+	printf("The average of 1 hops is: %lf\n", query_5);
+}
+void query6(double * * lab_matrix, int size, int source)
+{
+	int lcv = 0;
+	int lcv2 = 0;
+	int * query_4 = malloc(sizeof(int) * size);
+	int ctr = 0;
+	for(lcv = 0; lcv < size; lcv++)
+	{
+		if(lab_matrix[source - 1][lcv] != 0)
+		{
+			for(lcv2 = 0; lcv2 < size; lcv2++)
+			{
+				if(lab_matrix[lcv][lcv2] != 0 && lcv2 + 1 != source)
+				{
+					query_4[ctr] = lcv2 + 1;
+					ctr++;
+				}
+			}
+		}
+	}
+	printf("The number of 2nd hop number are: %d\n", ctr);
+	for(lcv = 0; lcv < ctr; lcv++)
+		printf("The nodes are %d\n", query_4[lcv]);
 }
