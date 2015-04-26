@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<string.h>
-
+#include<limits.h>
 void destroy_arr(int * age, int * gender, int * m_status, int * race, int * birth, int * lang, int * occupation, int * income);
 void print_arr(long int size, int * age, int * gender, int * m_status, int * race, int * birth, int * lang, int * occupation, int * income);
 void create_arr(int size, char * file, int * age, int * gender, int * m_status, int * race, int * birth, int * lang, int * occupation, int * income, FILE * fp);
@@ -21,6 +21,7 @@ int query6_helper(double * * lab_matrix, int size, int source);
 double min_dist(double * dist, int * sptSet, int size);
 void query2(double * * lab_matrix, int size, int source, double alpha);
 double cmp2(const void * a, const void * b);
+void print_matrix(double * * lab_matrix, int size);
 int main(int argc, char * * argv)
 {
 	double * * ulab_matrix = NULL;
@@ -49,14 +50,20 @@ int main(int argc, char * * argv)
 	create_arr(size, argv[1], age, gender, m_status, race, birth, lang, occupation, income, fp);
 	ulab_matrix = create_u_lab(size, age, gender, m_status, race, birth, lang, occupation, income, &l_max);
 	dense_graph = create_lab_matrix(ulab_matrix, size, l_max, delta_1);
-	printf("\n\n");
 	sparse_graph = create_lab_matrix(ulab_matrix, size, l_max, delta_2);
 	query1(dense_graph, size, source);
-	query3(dense_graph, size, source);
-	query5(dense_graph, size);
-	query4(dense_graph, size, source);
-	query6(dense_graph, size);
 	query2(dense_graph, size, source, alpha);
+	query3(dense_graph, size, source);
+	query4(dense_graph, size, source);
+	query5(dense_graph, size);
+	query6(dense_graph, size);
+	query1(sparse_graph, size, source);
+	query2(sparse_graph, size, source, alpha);
+	query3(sparse_graph, size, source);
+	query4(sparse_graph, size, source);
+	query5(sparse_graph, size);
+	query6(sparse_graph, size);
+	//print_matrix(dense_graph, size);
 	destroy_arr(age, gender, m_status, race, birth, lang, occupation, income);
 	destroy_matrix(ulab_matrix, size);
 	destroy_matrix(dense_graph, size);
@@ -115,8 +122,8 @@ double * * create_u_lab(long int size, int * age, int * gender, int * m_status, 
 	{
 		for(col = 0; col < size; col++)
 		{
-			ulab_matrix[row][col] = pow((age[row] - age[col]), 2) + pow((gender[row] - gender[col]), 2) + pow((m_status[row] - m_status[col]), 2) + pow((race[row] - race[col]), 2) + pow((birth[row] - birth[col]), 2) + pow((lang[row] - lang[col]), 2) + pow((occupation[row] - occupation[col]), 2) + pow((income[row] - income[col]), 2);
-			ulab_matrix[row][col] = sqrt(ulab_matrix[row][col]);
+			ulab_matrix[row][col] = sqrt(pow((age[row] - age[col]), 2) + pow((gender[row] - gender[col]), 2) + pow((m_status[row] - m_status[col]), 2) + pow((race[row] - race[col]), 2) + pow((birth[row] - birth[col]), 2) + pow((lang[row] - lang[col]), 2) + pow((occupation[row] - occupation[col]), 2) + pow((income[row] - income[col]), 2));
+			//ulab_matrix[row][col] = sqrt(ulab_matrix[row][col]);
 			if(row == 0 && col == 0)
 				* l_max = ulab_matrix[row][col];
 			if(ulab_matrix[row][col] > * l_max)
@@ -141,10 +148,9 @@ double * * create_lab_matrix(double * * ulab_matrix, int size, double l_max, dou
 		{
 			lab_matrix[row][col] = 1 - (ulab_matrix[row][col] / l_max);
 			lab_matrix[row][col] = (int) (lab_matrix[row][col] * 100);
-			lab_matrix[row][col] = lab_matrix [row][col] / 100;
-			if(lab_matrix[row][col] < delta || row == col)
+			lab_matrix[row][col] = lab_matrix[row][col] / 100;
+			if(lab_matrix[row][col] <= delta || row == col)
 				lab_matrix[row][col] = 0;
-			printf("lab value for row %d, col %d is: %lf\n",row + 1, col + 1,  lab_matrix[row][col]);
 		}
 	}
 	return lab_matrix;
@@ -162,15 +168,16 @@ void query1(double * * lab_matrix, int size, int source)
 	}
 	for(lcv = 0; lcv < size; lcv++)
 	{
-		if(min == lab_matrix[source - 1][lcv] && lab_matrix[source -1 ][lcv] != 0)
+		if(min == lab_matrix[source - 1][lcv] && lab_matrix[source - 1][lcv] != 0)
 		{
 			query_1[ctr] = lcv + 1;
 			ctr++;
 		}
 	}
+	printf("\n");
+	printf("%0.2lf", min);
 	for(lcv = 0; lcv < ctr; lcv++)
-		printf("The lowest LAB nodes are %d\n", query_1[lcv]);
-	printf("The smallest LAB value is: %lf\n", min);
+		printf(",%d", query_1[lcv]);
 	free(query_1);
 }
 void query3(double * * lab_matrix, int size, int source)
@@ -186,9 +193,11 @@ void query3(double * * lab_matrix, int size, int source)
 			ctr++;
 		}
 	}
-	printf("The number of immdiate neigbours for %d are: %d\n", source, ctr);
-	for(lcv = 0; lcv < ctr; lcv++)
-		printf("The node ID's are %d\n", query_3[lcv]);
+	printf("\n");
+	printf("%d,", ctr);
+	printf("%d", query_3[0]);
+	for(lcv = 1; lcv < ctr; lcv++)
+		printf(",%d", query_3[lcv]);
 	free(query_3);
 }
 void get_input(int * size, double * delta_1, double * delta_2, int * source, double * alpha, FILE * fp)
@@ -221,8 +230,9 @@ void query5(double * * lab_matrix, int size)
 			}
 		}
 	}
-	query_5 = ctr / size;
-	printf("The average of 1 hops is: %0.2lf\n", query_5);
+	printf("\n");
+	query_5 = (double) ctr / size;
+	printf("%0.2lf", query_5);
 }
 void query4(double * * lab_matrix, int size, int source)
 {
@@ -244,10 +254,12 @@ void query4(double * * lab_matrix, int size, int source)
 			}
 		}
 	}
+	printf("\n");
 	qsort(query_4, ctr, sizeof(int), cmp);
-	printf("The number of 2nd hop number are: %d\n", ctr);
-	for(lcv = 0; lcv < ctr; lcv++)
-		printf("The nodes are %d\n", query_4[lcv]);
+	printf("%d,", ctr);
+	printf("%d", query_4[0]);
+	for(lcv = 1; lcv < ctr; lcv++)
+		printf(",%d", query_4[lcv]);
 	free(query_4);
 }
 int not_in_array(int * arr, int size, int val)
@@ -264,6 +276,7 @@ int cmp(const void * a, const void * b)
 {
    return (*(int*)a - *(int*)b);
 }
+
 void query6(double * * lab_matrix, int size)
 {
 	int lcv = 0;
@@ -273,8 +286,9 @@ void query6(double * * lab_matrix, int size)
 	{
 		ctr += query6_helper(lab_matrix, size, lcv + 1);
 	}
+	printf("\n");
 	query_6 = (double) ctr / size;	
-	printf("The average for 2 hops is: %0.2lf", query_6);
+	printf("%0.2lf\n", query_6);
 }
 int query6_helper(double * * lab_matrix, int size, int source)
 {
@@ -299,6 +313,7 @@ int query6_helper(double * * lab_matrix, int size, int source)
 	free(query_4);
 	return ctr;
 }
+
 void query2(double * * lab_matrix, int size, int source, double alpha)
 {
 	int ctr = 0;
@@ -309,10 +324,10 @@ void query2(double * * lab_matrix, int size, int source, double alpha)
 	int * sptSet = malloc(sizeof(int) * size);
 	for (i = 0; i < size; i++)
 	{
-		dist[i] = 1;
+		dist[i] = INT_MAX;
 		sptSet[i] = 0;
 	}
-	dist[source] = 0;
+	dist[source - 1] = 0;
 	for (count = 0; count < size - 1; count++)
 	{
 		int u = min_dist(dist, sptSet, size);
@@ -331,11 +346,12 @@ void query2(double * * lab_matrix, int size, int source, double alpha)
 		if(dist[i] < alpha)
 			ctr++;
 	}
-	printf("number of nodes with shortest distance less than alpha is: %d", ctr - 1);
+	printf("\n");
+	printf("%d", ctr - 1);
 }
 double min_dist(double * dist, int * sptSet, int size)
 {
-	int min = 1, min_index;
+	int min = INT_MAX, min_index;
 	int v = 0;
 	for (v = 0; v < size; v++)
 	{
@@ -349,4 +365,17 @@ double min_dist(double * dist, int * sptSet, int size)
 double cmp2(const void * a, const void * b)
 {
    return (*(double*)a - *(double*)b);
+}
+void print_matrix(double * * lab_matrix, int size)
+{
+	int lcv = 0;
+	int lcv2 = 0;
+	for(lcv = 0; lcv < size; lcv++)
+	{
+		for(lcv2 = 0; lcv2 < size; lcv2++)
+		{
+			printf("%0.2lf, ", lab_matrix[lcv][lcv2]);
+		}
+		printf("\n");
+	}
 }
