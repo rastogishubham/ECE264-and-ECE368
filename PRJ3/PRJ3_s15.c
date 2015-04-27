@@ -232,6 +232,8 @@ void query5(double * * lab_matrix, int size)
 	}
 	printf("\n");
 	query_5 = (double) ctr / size;
+	query_5 = (int) (query_5 * 100);
+	query_5 = query_5 / 100;
 	printf("%0.2lf", query_5);
 }
 void query4(double * * lab_matrix, int size, int source)
@@ -288,6 +290,8 @@ void query6(double * * lab_matrix, int size)
 	}
 	printf("\n");
 	query_6 = (double) ctr / size;
+	query_6 = (int) (query_6 * 100);
+	query_6 = query_6 / 100;
 	printf("%0.2lf\n", query_6);
 }
 int query6_helper(double * * lab_matrix, int size, int source)
