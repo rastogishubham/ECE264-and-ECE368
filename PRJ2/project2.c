@@ -1,22 +1,20 @@
+
+//Name: Shubham Sandeep Rastogi
+//PUID: 0026340022
+//Email: rastogis@purdue.edu
+//Assignment: ECE 368 Project 2
+
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
 #include<sys/time.h>
 #include<string.h>
-#define NUM 10
-#define TIME(fun) do {\
-                    struct timeval start, end, diff;\
-                    gettimeofday(&start, NULL);\
-                    fun;\
-                    gettimeofday(&end, NULL);\
-                    timersub(&end, &start, &diff);\
-                    printf("Time taken: %ld.%06ld sec.\n",(long int)diff.tv_sec, (long int)diff.tv_usec);\
-                } while(0)
-void sorted(int *);
 void max_min(int *, int, int *, int *, int *);
 void c_sort(int *, int, int);
 void RadixSort(int *, int);
-void printArray(int *, int);
+void sort(int [], int);
+
 void sort(int arr[], int n)
 {
 	int flag = 0;
@@ -26,14 +24,11 @@ void sort(int arr[], int n)
 	if(flag == 1 && max/n < 5 && min >= 0 && max < 1200000)
 	{
 		c_sort(arr, n, max);
-		printf("Count sort");
 	}
 	else if(flag == 1)
 	{
-		printf("Radix sort");
 		RadixSort(arr, n);
 	}
-//	printArray(arr, n);
 }
 	
 void max_min(int arr[], int n, int * max, int * min, int * flag)
@@ -47,7 +42,7 @@ void max_min(int arr[], int n, int * max, int * min, int * flag)
 		{
 			* max = arr[i];
 		}
-		else
+		else if(arr[i] < * min)
 		{
 			* min = arr[i];
 		}
@@ -60,7 +55,6 @@ void max_min(int arr[], int n, int * max, int * min, int * flag)
 void c_sort(int arr[], int n, int max)
 {
 	int current = 0;
-//	int max = maximum(arr, n);
 	int * count = calloc(max + 1, sizeof(int));
 	for(current = 0; current < n; current++)
 	{
@@ -79,34 +73,46 @@ void c_sort(int arr[], int n, int max)
 	}		
 	free(count);
 }
-void printArray(int * arr, int n)
-{
-	int lcv = 0;
-	for(lcv = 0; lcv < n; lcv++)
-	{
-		printf("%d\n", arr[lcv]);
-	}
-	printf("\n lcv %d\n", lcv);
-}
-int cmp(const void * a, const void * b)
-{
-	return *(int *)a - *(int*)b;
-}
 
+
+/*
+int main()
+{
+        int * arr = malloc(sizeof(int) * NUM);
+        int lcv = 0;
+        srand(time(NULL));
+        printf("Orignal Array");
+        for(lcv = 0; lcv < NUM; lcv++)
+        {
+                arr[lcv] = rand() % 1000000;
+                if(arr[lcv] % 5  == 0)
+                {
+                        arr[lcv] *= -1;
+                }
+        printf("ARR[%d] = %d\n",lcv, arr[lcv]);
+        }
+        TIME(sort(arr, NUM));
+        sorted(arr, NUM);
+        free(arr);
+        return EXIT_SUCCESS;
+}
+*/
+
+//code was adaptd from the textbook and the internet for this function
 void RadixSort(int * pData, int count)
 {
 	int * pTemp = malloc(sizeof(int) * (count + 1));	
-	int mIndex[4][256] = {{0}};            // index matrix
+	int mIndex[4][256] = {{0}};            
 	unsigned int * pDst, * pTmp, * pSrc;
 	int i,j,m,n;
 	unsigned int u;
 	for(i = 0; i < count; i++)
-	{         // generate histograms
+	{         
 		u = pData[i];
 		for(j = 0; j < 4; j++)
 		{
 			if(j != 3)
-			{                 //  signed integer handling
+			{                 
 				mIndex[j][(int)(u & 0xff)]++;
 			}
 			else
@@ -117,7 +123,7 @@ void RadixSort(int * pData, int count)
 		}       
 	}
 	for(j = 0; j < 4; j++)
-	{             // convert to indices
+	{            
 		n = 0;
 		for(i = 0; i < 256; i++)
 		{
@@ -126,16 +132,15 @@ void RadixSort(int * pData, int count)
 			n += m;
 		}       
 	}
-	pDst = (unsigned int *)pTemp;               // radix sort
+	pDst = (unsigned int *)pTemp;              
 	pSrc = (unsigned int *)pData;
-//	printf("\n psrc %p, pdata %p, \n", pSrc, pData);
 	for(j = 0; j < 4; j++)
 	{
 		for(i = 0; i < count; i++)
 		{
 			u = pSrc[i];
 			if(j != 3)
-			{                  //  signed integer handling
+			{                  
 				m = (int)(u >> (j<<3)) & 0xff;
 			}
 			else
@@ -148,69 +153,8 @@ void RadixSort(int * pData, int count)
 		pSrc = pDst;
 		pDst = pTmp;
 	}
-	memcpy(pData, (int *) pSrc, count);
 	free(pTemp);
 }
 
-int main()
-{
-	int * arr = malloc(sizeof(int) * NUM);
-//	int * arr_cpy = malloc(sizeof(int) * NUM);
-//	int * arr_cpy_2 = malloc(sizeof(int) * NUM);
-	int lcv = 0;
-	//int flag = 0;
-	srand(time(NULL));
-	printf("Orignal Array");
-	for(lcv = 0; lcv < NUM; lcv++)
-	{
-		arr[lcv] = rand() % 10000;
-		if(arr[lcv] % 5 == 0)
-		{
-			arr[lcv] *= -1;
-		}
-//		arr_cpy[lcv] = arr[lcv];
-//		arr_cpy_2[lcv] = arr[lcv];
-		//printf("%d\n", arr[lcv]);
-	}
-//	TIME(c_sort(arr, NUM));
-//	printf("Count\n");
-//	sorted(arr);
-//	TIME(qsort(arr_cpy, NUM, sizeof(int), cmp));
-//	sorted(arr_cpy);
-//	printf("Qsort\n");
-//	TIME(RadixSort(arr_cpy_2, NUM));
-//	sorted(arr_cpy_2);
-//	printf("Radix\n");
-//	printArray(arr, NUM);
-//	free(arr);
-//	free(arr_cpy);
-//	free(arr_cpy_2);
-	TIME(sort(arr, NUM));
-	sorted(arr);
-	free(arr);
-	return EXIT_SUCCESS;
-}
-void sorted(int * arr)
-{
-	int lcv = 0;
-	int flag = 0;
-	for(lcv = 0; lcv < NUM - 1; lcv++)
-	{
-		if(arr[lcv] > arr[lcv + 1])
-		{
-			flag = 1;
-			break;
-		}
-	}
-	if(flag == 1)
-	{
-		printf("Not sorted\n");
-	}
-	else
-	{
-		printf("Sorted\n");
-	}
-//	free(arr);
-//	free(arr_cpy);
-//	free(arr_cpy_2);
-}
+
+
