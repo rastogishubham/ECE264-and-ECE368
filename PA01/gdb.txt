@@ -1,0 +1,15 @@
+Breakpoint 1 at 0x4008f1: file pa01.c, line 95.
+Starting program: /home/shay/a/rastogis/ECE264/solutions/demorepo/PA01/pa01 
+shi
+Breakpoint 1, main (argc=1, argv=0x7fffffffe4f8) at pa01.c:97
+97	    printf("Welcome to ECE264, we are working on PA01.\n\n");
+Missing separate debuginfos, use: debuginfo-install glibc-2.12-1.132.el6_5.4.x86_64
+100	    test_00_arraySum();
+101	    test_01_arrayCountNegative();
+103	    return EXIT_SUCCESS;
+104	}
+A debugging session is active.
+
+	Inferior 1 [process 8938] will be killed.
+
+Quit anyway? (y or n) 
